@@ -25,7 +25,118 @@
 .empty{text-align:center;padding:48px 20px;color:var(--text2)}.empty .icon{font-size:48px;margin-bottom:12px;opacity:.5}
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--text);color:#fff;padding:12px 24px;border-radius:10px;font-size:14px;z-index:2000;opacity:0;transition:opacity .3s;pointer-events:none}.toast.show{opacity:1}.toast.error{background:var(--red)}.toast.success{background:var(--green)}
 .filter-bar{display:flex;gap:12px;margin-bottom:16px;align-items:center;flex-wrap:wrap}.filter-bar select,.filter-bar input{padding:8px 12px;border:1px solid var(--border);border-radius:8px;font-size:14px}
-@media(max-width:768px){.header{padding:12px 16px}.stats-bar{padding:12px 16px;gap:8px}.stat-card{min-width:120px;padding:10px 14px}.main{padding:0 16px 16px}}
+/* === Mobile responsive === */
+@media(max-width:768px){
+  /* Header */
+  .header{padding:10px 12px;flex-wrap:wrap;gap:8px}
+  .header h1{font-size:16px}
+  .header-actions{gap:6px}
+  .header-actions .btn{padding:6px 10px;font-size:13px}
+  /* Data bar */
+  .data-bar{padding:6px 12px;flex-wrap:wrap;gap:6px;font-size:11px}
+  .data-bar button{padding:3px 8px;font-size:11px}
+  /* Stats bar */
+  .stats-bar{padding:8px 12px;gap:8px}
+  .stat-card{min-width:0 !important;flex:1 1 calc(50% - 4px);padding:10px 12px;gap:8px}
+  .stat-icon{width:32px;height:32px;font-size:16px;border-radius:8px}
+  .stat-val{font-size:18px}
+  .stat-label{font-size:11px}
+  /* Main */
+  .main{padding:0 12px 16px}
+  /* Tabs - horizontal scroll */
+  .tabs{overflow-x:auto;white-space:nowrap;-webkit-overflow-scrolling:touch;gap:2px;scrollbar-width:thin}
+  .tabs::-webkit-scrollbar{height:3px}
+  .tab{padding:8px 12px;font-size:13px;white-space:nowrap;flex-shrink:0}
+  /* Calendar */
+  .calendar-header{flex-wrap:wrap;gap:8px}
+  .month-nav{gap:4px;flex-wrap:wrap}
+  .month-nav button{padding:5px 10px;font-size:13px}
+  .month-title{font-size:15px;min-width:100px}
+  .legend{flex-wrap:wrap;gap:6px;font-size:11px}
+  .calendar-wrap{max-height:600px;border-radius:10px}
+  .cal-day-header{min-width:85px;width:85px}
+  .calendar-table{min-width:0}
+  .calendar-table th{font-size:11px;padding:4px 2px}
+  .room-label{min-width:65px;font-size:12px;padding:6px 4px}
+  .room-label .room-icon{font-size:16px}
+  .cal-cell{height:72px}
+  .booking-block{padding:2px 3px;font-size:10px;gap:1px}
+  .booking-block .guest{font-size:10px}
+  .booking-block .meta{font-size:8px}
+  .booking-block .remark-line{font-size:8px}
+  .booking-block .parking-line{font-size:8px}
+  .booking-block .parking-dot{width:7px;height:7px;top:3px;right:3px}
+  /* Filter bar */
+  .filter-bar{flex-direction:column;align-items:stretch;gap:6px}
+  .filter-bar select,.filter-bar input{width:100%;font-size:13px}
+  /* Booking list */
+  .booking-item{flex-direction:column;align-items:flex-start;gap:6px;padding:12px}
+  .booking-item .dates{min-width:0;display:flex;gap:6px;align-items:center}
+  .booking-item .dates .date-in{font-size:14px}
+  .booking-item .dates .date-out{font-size:11px}
+  .booking-item .info .name{font-size:14px}
+  .booking-item .info .details{font-size:11px}
+  .booking-item .actions{width:100%;justify-content:flex-end}
+  /* Parking */
+  .parking-grid{grid-template-columns:1fr;gap:12px}
+  .parking-card{padding:12px}
+  /* Revenue */
+  .rev-summary{gap:8px}
+  .rev-summary-card{min-width:0;flex:1 1 calc(50% - 4px);padding:12px;gap:8px}
+  .rev-summary-icon{width:36px;height:36px;font-size:18px}
+  .rev-summary-val{font-size:18px}
+  .rev-summary-label{font-size:11px}
+  .rev-platform-grid{grid-template-columns:1fr;gap:12px}
+  .rev-card{padding:12px}
+  .rev-sub-tabs{overflow-x:auto;white-space:nowrap;-webkit-overflow-scrolling:touch}
+  .rev-sub-tab{padding:6px 12px;font-size:13px;flex-shrink:0;white-space:nowrap}
+  .rev-nav{flex-direction:column;align-items:stretch;gap:8px}
+  .rev-nav-group{justify-content:center}
+  .rev-nav .rev-title{font-size:15px;min-width:0;text-align:center}
+  .rev-nav select,.rev-nav button{padding:5px 12px;font-size:13px}
+  .rev-table th,.rev-table td{padding:6px 8px;font-size:12px}
+  .rev-matrix th,.rev-matrix td{padding:5px 6px;font-size:11px}
+  /* iCal */
+  .ical-config{padding:12px}
+  .ical-room-row{flex-direction:column;gap:6px}
+  .ical-room-label{min-width:0;padding-top:0}
+  .ical-input-group{min-width:0}
+  .ical-input-group input{font-size:12px}
+  .ical-help{padding:10px 12px;font-size:12px;line-height:1.5}
+  .ical-paste-area{min-height:80px;font-size:12px}
+  .ical-sync-bar{flex-wrap:wrap}
+  /* Modal */
+  .modal-overlay{padding:10px}
+  .modal{padding:16px;border-radius:12px;max-width:none;max-height:88vh}
+  .modal h2{font-size:16px;margin-bottom:12px}
+  .form-row{flex-direction:column;gap:0}
+  .form-control{font-size:13px}
+  .modal-actions{flex-wrap:wrap}
+  /* Exceptions */
+  .exc-item{padding:10px 12px}
+  .exc-header{flex-direction:column;gap:6px}
+  .exc-actions{width:100%;justify-content:flex-end}
+  .exc-body{font-size:12px;line-height:1.6}
+  /* Toast */
+  .toast{bottom:16px;font-size:13px;padding:10px 16px;max-width:calc(100% - 24px)}
+  /* Buttons */
+  .btn{padding:7px 12px;font-size:13px}
+  .btn-sm{padding:4px 10px;font-size:12px}
+}
+@media(max-width:480px){
+  .header h1{font-size:15px}
+  .header-actions .btn{padding:5px 8px;font-size:12px}
+  .stat-card{flex:1 1 100%}
+  .cal-day-header{min-width:68px;width:68px}
+  .room-label{min-width:52px;font-size:11px}
+  .cal-cell{height:60px}
+  .rev-summary-card{flex:1 1 100%}
+  .month-title{font-size:13px;min-width:80px}
+  .calendar-table th{font-size:10px}
+  .booking-block .guest{font-size:9px}
+  .booking-block .meta{display:none}
+  .modal{padding:14px}
+}
 .ical-config{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:16px}
 .ical-room-row{display:flex;gap:12px;align-items:flex-start;margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid var(--border);flex-wrap:wrap}
 .ical-room-row:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
