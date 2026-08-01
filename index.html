@@ -14,7 +14,7 @@
 .calendar-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}.month-nav{display:flex;align-items:center;gap:12px}.month-nav button{border:1px solid var(--border);background:var(--card);border-radius:8px;padding:6px 14px;cursor:pointer;font-size:14px;transition:all .2s}.month-nav button:hover{background:var(--primary-light);border-color:var(--primary)}.month-title{font-size:18px;font-weight:700;min-width:140px;text-align:center}
 .calendar-wrap{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:auto;max-height:750px}.calendar-table{border-collapse:collapse;width:100%;min-width:1400px}.calendar-table th,.calendar-table td{border:1px solid var(--border);padding:0;vertical-align:top}.calendar-table th{background:#f8fafc;padding:8px 4px;font-size:13px;font-weight:600;color:var(--text2);text-align:center;position:sticky;top:0;z-index:5}.cal-day-header{min-width:120px;width:120px}.cal-day-header.today{background:var(--primary-light);color:var(--primary)}.cal-day-header .day-num{font-size:18px;font-weight:700;color:var(--text)}.cal-day-header .day-name{font-size:11px;text-transform:uppercase}.cal-day-header.today .day-num{color:var(--primary)}
 .room-label{padding:10px 14px;font-weight:600;background:#f8fafc;position:sticky;left:0;z-index:3;min-width:100px;font-size:14px}.room-label .room-icon{font-size:20px;margin-bottom:2px}.cal-cell{height:100px;cursor:pointer;position:relative;transition:background .15s}.cal-cell:hover{background:var(--primary-light)}.cal-cell.today{background:#fef3c7}.cal-cell.today:hover{background:#fde68a}
-.booking-block{position:absolute;top:2px;left:2px;right:2px;bottom:2px;border-radius:6px;padding:6px 8px;font-size:13px;color:#fff;overflow:hidden;cursor:pointer;display:flex;flex-direction:column;justify-content:flex-start;gap:2px}.booking-block .guest{font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:13px}.booking-block .meta{font-size:11px;opacity:.9;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.booking-block .remark-line{font-size:11px;opacity:.95;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.booking-block .parking-line{font-size:11px;opacity:.9;white-space:nowrap}.booking-block.platform-booking{background:var(--booking-color)}.booking-block.platform-airbnb{background:var(--airbnb-color)}.booking-block.platform-direct{background:var(--direct-color)}.booking-block .parking-dot{position:absolute;top:5px;right:5px;width:10px;height:10px;border-radius:50%;background:#fbbf24;border:1px solid rgba(255,255,255,.5)}
+.booking-block{position:absolute;top:2px;left:2px;right:2px;bottom:2px;border-radius:6px;padding:6px 8px;font-size:13px;color:#fff;overflow:hidden;cursor:pointer;display:flex;flex-direction:column;justify-content:flex-start;gap:2px}.booking-block .guest{font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:13px}.booking-block .meta{font-size:11px;opacity:.9;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.booking-block .remark-line{font-size:11px;opacity:.95;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.booking-block .parking-line{font-size:11px;opacity:.9;white-space:nowrap}.booking-block.platform-booking{background:var(--booking-color)}.booking-block.platform-airbnb{background:var(--airbnb-color)}.booking-block.platform-direct{background:var(--direct-color)}.booking-block.status-blocked{background:#9ca3af;opacity:.7}.booking-block.status-blocked .guest{font-size:11px}.booking-block .parking-dot{position:absolute;top:5px;right:5px;width:10px;height:10px;border-radius:50%;background:#fbbf24;border:1px solid rgba(255,255,255,.5)}
 .btn{border:none;border-radius:8px;padding:8px 16px;cursor:pointer;font-size:14px;font-weight:500;transition:all .2s;display:inline-flex;align-items:center;gap:6px}.btn-primary{background:var(--primary);color:#fff}.btn-primary:hover{background:#4338ca}.btn-outline{background:var(--card);border:1px solid var(--border);color:var(--text)}.btn-outline:hover{border-color:var(--primary);color:var(--primary)}.btn-danger{background:var(--red);color:#fff}.btn-danger:hover{background:#b91c1c}.btn-sm{padding:5px 12px;font-size:13px}
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);display:none;align-items:center;justify-content:center;z-index:1000;padding:20px}.modal-overlay.show{display:flex}.modal{background:var(--card);border-radius:16px;padding:24px;width:100%;max-width:520px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.15)}.modal h2{font-size:18px;margin-bottom:20px}.form-group{margin-bottom:16px}.form-group label{display:block;font-size:13px;font-weight:600;margin-bottom:6px;color:var(--text2)}.form-group label .req{color:var(--red)}.form-control{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:8px;font-size:14px;font-family:inherit;transition:border-color .2s}.form-control:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px var(--primary-light)}textarea.form-control{resize:vertical;min-height:70px}.form-row{display:flex;gap:12px}.form-row .form-group{flex:1}.modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:20px}
 .platform-badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;color:#fff}.platform-badge.booking{background:var(--booking-color)}.platform-badge.airbnb{background:var(--airbnb-color)}.platform-badge.direct{background:var(--direct-color)}
@@ -231,12 +231,12 @@
 </div>
 <div id="tab-exceptions" style="display:none"><div id="exceptionsContent"></div></div>
 </div>
-<div class="modal-overlay" id="bookingModal"><div class="modal"><h2 id="modalTitle">新增预订</h2><input type="hidden" id="bookingId"><div class="form-group"><label>客人姓名 <span class="req">*</span></label><input type="text" class="form-control" id="guestName" placeholder="如：张三"></div><div class="form-row"><div class="form-group"><label>房间 <span class="req">*</span></label><select class="form-control" id="roomId"></select></div><div class="form-group"><label>平台来源</label><select class="form-control" id="platform"><option value="direct">直客</option><option value="booking">Booking.com</option><option value="airbnb">Airbnb</option></select></div></div><div class="form-row"><div class="form-group"><label>入住日期 <span class="req">*</span></label><input type="date" class="form-control" id="checkIn"></div><div class="form-group"><label>退房日期 <span class="req">*</span></label><input type="date" class="form-control" id="checkOut"></div></div><div class="form-row"><div class="form-group"><label>车位分配</label><select class="form-control" id="parkingSpot"><option value="">不需要车位</option></select></div><div class="form-group"><label>联系电话</label><input type="text" class="form-control" id="phone" placeholder="可选"></div></div><div class="form-row"><div class="form-group"><label>订单总价 (¥)</label><input type="number" class="form-control" id="price" placeholder="如：800" min="0" step="0.01"></div><div class="form-group"><label>状态</label><select class="form-control" id="status"><option value="confirmed">已确认</option><option value="pending">待确认</option><option value="cancelled">已取消</option></select></div></div><div class="form-group"><label>备注</label><textarea class="form-control" id="remark" placeholder="入住时间、特殊需求、钥匙放置位置等..."></textarea></div><div class="modal-actions"><button class="btn btn-danger" id="deleteBtn" style="display:none;margin-right:auto" onclick="deleteBooking()">删除</button><button class="btn btn-outline" onclick="closeBookingModal()">取消</button><button class="btn btn-primary" onclick="saveBooking()">保存</button></div></div></div>
+<div class="modal-overlay" id="bookingModal"><div class="modal"><h2 id="modalTitle">新增预订</h2><input type="hidden" id="bookingId"><div class="form-group"><label>客人姓名 <span class="req">*</span></label><input type="text" class="form-control" id="guestName" placeholder="如：张三"></div><div class="form-row"><div class="form-group"><label>房间 <span class="req">*</span></label><select class="form-control" id="roomId"></select></div><div class="form-group"><label>平台来源</label><select class="form-control" id="platform"><option value="direct">直客</option><option value="booking">Booking.com</option><option value="airbnb">Airbnb</option></select></div></div><div class="form-row"><div class="form-group"><label>入住日期 <span class="req">*</span></label><input type="date" class="form-control" id="checkIn"></div><div class="form-group"><label>退房日期 <span class="req">*</span></label><input type="date" class="form-control" id="checkOut"></div></div><div class="form-row"><div class="form-group"><label>车位分配</label><select class="form-control" id="parkingSpot"><option value="">不需要车位</option></select></div><div class="form-group"><label>联系电话</label><input type="text" class="form-control" id="phone" placeholder="可选"></div></div><div class="form-row"><div class="form-group"><label>订单总价 (¥)</label><input type="number" class="form-control" id="price" placeholder="如：800" min="0" step="0.01"></div><div class="form-group"><label>状态</label><select class="form-control" id="status"><option value="confirmed">已确认</option><option value="pending">待确认</option><option value="cancelled">已取消</option><option value="blocked">已封锁</option></select></div></div><div class="form-group"><label>备注</label><textarea class="form-control" id="remark" placeholder="入住时间、特殊需求、钥匙放置位置等..."></textarea></div><div class="modal-actions"><button class="btn btn-danger" id="deleteBtn" style="display:none;margin-right:auto" onclick="deleteBooking()">删除</button><button class="btn btn-outline" onclick="closeBookingModal()">取消</button><button class="btn btn-primary" onclick="saveBooking()">保存</button></div></div></div>
 <div class="modal-overlay" id="roomModal"><div class="modal" style="max-width:440px"><h2>⚙️ 房间设置</h2><p style="font-size:13px;color:var(--text2);margin-bottom:16px">修改房间名称，保存后日历和列表会自动更新</p><div id="roomSettingsList"></div><div class="modal-actions"><button class="btn btn-outline" onclick="closeRoomModal()">取消</button><button class="btn btn-primary" onclick="saveRoomSettings()">保存</button></div></div></div>
 <div class="toast" id="toast"></div>
 <script>
 let DB={rooms:[{id:1,name:'房间1',description:''},{id:2,name:'房间2',description:''},{id:3,name:'房间3',description:''}],parkingSpots:[{id:1,name:'车位A'},{id:2,name:'车位B'}],bookings:[],nextId:1,conflicts:[],nextConflictId:1};
-const pMap={booking:'Booking',airbnb:'Airbnb',direct:'直客'},pMapFull={booking:'Booking.com',airbnb:'Airbnb',direct:'直客'},sMap={confirmed:'已确认',pending:'待确认',cancelled:'已取消'},sColor={confirmed:'var(--green)',pending:'var(--orange)',cancelled:'var(--text2)'};
+const pMap={booking:'Booking',airbnb:'Airbnb',direct:'直客'},pMapFull={booking:'Booking.com',airbnb:'Airbnb',direct:'直客'},sMap={confirmed:'已确认',pending:'待确认',cancelled:'已取消',blocked:'已封锁'},sColor={confirmed:'var(--green)',pending:'var(--orange)',cancelled:'var(--text2)',blocked:'#9ca3af'};
 let currentMonth=new Date(),revenueMonth=new Date();
 function loadDB(){try{const s=localStorage.getItem('minsu_db');if(s){const d=JSON.parse(s);DB.rooms=d.rooms||DB.rooms;DB.parkingSpots=d.parkingSpots||DB.parkingSpots;DB.bookings=d.bookings||[];DB.nextId=d.nextId||(DB.bookings.length?Math.max(...DB.bookings.map(b=>b.id))+1:1);DB.conflicts=d.conflicts||[];DB.nextConflictId=d.nextConflictId||(DB.conflicts.length?Math.max(...DB.conflicts.map(c=>c.id))+1:1);}}catch(e){}}
 function saveDB(){localStorage.setItem('minsu_db',JSON.stringify(DB));debouncedSync();}
@@ -257,6 +257,8 @@ function debouncedSync(){if(syncTimer)clearTimeout(syncTimer);syncTimer=setTimeo
 async function cloudSyncInit(){updateSyncStatus('connecting');try{const r=await fetch('https://api.github.com/repos/'+CLOUD.owner+'/'+CLOUD.repo+'/contents/'+CLOUD.path+'?ref='+CLOUD.branch+'&t='+Date.now(),{headers:{Authorization:'token '+CLOUD.token,Accept:'application/vnd.github+json'}});if(r.status===404){updateSyncStatus('synced','首次同步');DB.lastSync=new Date().toISOString();localStorage.setItem('minsu_db',JSON.stringify(DB));syncToCloud();return;}if(!r.ok){updateSyncStatus('error');return;}const d=await r.json();const content=decodeURIComponent(escape(atob(d.content)));const cloudDB=JSON.parse(content);const ct=cloudDB.lastSync?new Date(cloudDB.lastSync).getTime():0;const lt=DB.lastSync?new Date(DB.lastSync).getTime():0;const lc=DB.bookings?DB.bookings.length:0;const cc=cloudDB.bookings?cloudDB.bookings.length:0;if(ct>lt&&cc>=lc){DB=cloudDB;DB.lastSync=cloudDB.lastSync;localStorage.setItem('minsu_db',JSON.stringify(DB));toast('已从云端同步最新数据','success');refreshAll();updateSyncStatus('synced',new Date().toLocaleTimeString('zh-CN'));}else if(ct>lt&&cc<lc){updateSyncStatus('synced',new Date().toLocaleTimeString('zh-CN'));DB.lastSync=new Date().toISOString();localStorage.setItem('minsu_db',JSON.stringify(DB));syncToCloud();}else{updateSyncStatus('synced',new Date().toLocaleTimeString('zh-CN'));}}catch(e){updateSyncStatus('error');}}
 // ====== iCal 同步 ======
 const ICAL_PROXIES = [
+  url => url,
+  url => 'https://proxy.cors.sh/' + url,
   url => 'https://api.allorigins.win/raw?url=' + encodeURIComponent(url),
   url => 'https://corsproxy.io/?url=' + encodeURIComponent(url),
   url => 'https://cors.eu.org/' + url
@@ -408,15 +410,13 @@ function syncEventsToBookings(events, roomId, platform) {
       return;
     }
     
-    // Skip blocked/unavailable entries
+    // Detect blocked/unavailable entries from Booking.com
     const summary = (event.summary || '').toLowerCase();
-    if (summary.includes('blocked') || summary.includes('not available') || summary.includes('unavailable')) {
-      skipped++;
-      return;
-    }
+    const isBlocked = summary.includes('blocked') || summary.includes('not available') || summary.includes('unavailable') || summary.includes('closed');
     
     const syncUid = (event.uid || platform + '_' + roomId + '_' + checkIn + '_' + checkOut).trim();
-    const guestName = extractGuestName(event);
+    const guestName = isBlocked ? '已封锁' : extractGuestName(event);
+    const bookingStatus = isBlocked ? 'blocked' : 'confirmed';
     
     // Check if this synced booking already exists
     const existing = DB.bookings.find(b => b.sync_uid === syncUid);
@@ -426,27 +426,31 @@ function syncEventsToBookings(events, roomId, platform) {
       if (existing.check_in !== checkIn || existing.check_out !== checkOut) {
         existing.check_in = checkIn;
         existing.check_out = checkOut;
+        existing.status = bookingStatus;
+        existing.guest_name = guestName;
         updated++;
       } else {
         skipped++; // No change
       }
     } else {
-      // Check for room conflict with manually created bookings
-      const conflict = DB.bookings.find(b =>
-        b.room_id === roomId &&
-        b.status !== 'cancelled' &&
-        !b.sync_uid &&
-        b.check_in < checkOut && b.check_out > checkIn
-      );
-      
-      if (conflict) {
-        DB.conflicts.push({id:DB.nextConflictId++,type:'room',sync_uid:syncUid,new_data:{room_id:roomId,guest_name:guestName,check_in:checkIn,check_out:checkOut,platform:platform,price:0},existing_id:conflict.id,existing_guest:conflict.guest_name,existing_checkin:conflict.check_in,existing_checkout:conflict.check_out,existing_room:roomName(conflict.room_id),existing_platform:conflict.platform||'direct',source:'iCal同步('+platform+')',created_at:new Date().toISOString(),status:'pending'});
-        results.push({ guest: conflict.guest_name, dates: conflict.check_in + '~' + conflict.check_out, action: '冲突已记录到异常' });
-        skipped++;
-        return;
+      // Check for room conflict with manually created bookings (only for confirmed, not blocked)
+      if (!isBlocked) {
+        const conflict = DB.bookings.find(b =>
+          b.room_id === roomId &&
+          b.status !== 'cancelled' &&
+          !b.sync_uid &&
+          b.check_in < checkOut && b.check_out > checkIn
+        );
+        
+        if (conflict) {
+          DB.conflicts.push({id:DB.nextConflictId++,type:'room',sync_uid:syncUid,new_data:{room_id:roomId,guest_name:guestName,check_in:checkIn,check_out:checkOut,platform:platform,price:0},existing_id:conflict.id,existing_guest:conflict.guest_name,existing_checkin:conflict.check_in,existing_checkout:conflict.check_out,existing_room:roomName(conflict.room_id),existing_platform:conflict.platform||'direct',source:'iCal同步('+platform+')',created_at:new Date().toISOString(),status:'pending'});
+          results.push({ guest: conflict.guest_name, dates: conflict.check_in + '~' + conflict.check_out, action: '冲突已记录到异常' });
+          skipped++;
+          return;
+        }
       }
       
-      // Create new booking
+      // Create new booking (including blocked dates)
       DB.bookings.push({
         id: DB.nextId++,
         room_id: roomId,
@@ -457,8 +461,8 @@ function syncEventsToBookings(events, roomId, platform) {
         parking_spot_id: null,
         phone: '',
         price: 0,
-        remark: '┄ iCal同步',
-        status: 'confirmed',
+        remark: isBlocked ? '🔒 平台封锁日期' : '┄ iCal同步',
+        status: bookingStatus,
         sync_uid: syncUid,
         sync_platform: platform
       });
@@ -470,23 +474,30 @@ function syncEventsToBookings(events, roomId, platform) {
 }
 
 async function fetchICal(url) {
+  const errors = [];
   for (let i = 0; i < ICAL_PROXIES.length; i++) {
     try {
       const proxyUrl = ICAL_PROXIES[i](url);
+      const proxyName = i === 0 ? '直连' : i === 1 ? 'proxy.cors.sh' : i === 2 ? 'allorigins' : i === 3 ? 'corsproxy.io' : 'cors.eu.org';
       const response = await fetch(proxyUrl, { 
-        signal: AbortSignal.timeout(15000)
+        signal: AbortSignal.timeout(20000),
+        headers: i === 1 ? { 'x-cors-api-key': 'temp_demo_key' } : {}
       });
       if (response.ok) {
         const text = await response.text();
         if (text && text.includes('BEGIN:VCALENDAR')) {
           return text;
         }
+        errors.push(proxyName + ': 返回内容非iCal格式');
+      } else {
+        errors.push(proxyName + ': HTTP ' + response.status);
       }
     } catch(e) {
-      console.warn('Proxy ' + i + ' failed:', e.message);
+      const proxyName = i === 0 ? '直连' : i === 1 ? 'proxy.cors.sh' : i === 2 ? 'allorigins' : i === 3 ? 'corsproxy.io' : 'cors.eu.org';
+      errors.push(proxyName + ': ' + e.message);
     }
   }
-  throw new Error('所有代理均失败');
+  throw new Error('所有代理均失败: ' + errors.join('; '));
 }
 
 async function syncAllIcal() {
@@ -557,7 +568,7 @@ async function syncAllIcal() {
     }
   });
   
-  html += '<div style="margin-top:12px;font-size:12px;color:var(--text2)">💡 同步的预订标记为"┄ iCal同步"，可在预订列表中编辑补充价格和备注。</div>';
+  html += '<div style="margin-top:12px;font-size:12px;color:var(--text2)">💡 封锁日期显示为灰色，表示该日期在平台上不可预订。实际预订可编辑补充价格和备注。</div>';
   resultEl.innerHTML = html;
   
   const lastEl = document.getElementById('syncLastTime');
@@ -647,7 +658,7 @@ function renderFilterRooms(){document.getElementById('filterRoom').innerHTML='<o
 function switchTab(t){document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));document.querySelector('.tab[data-tab="'+t+'"]').classList.add('active');document.querySelectorAll('[id^="tab-"]').forEach(el=>el.style.display='none');document.getElementById('tab-'+t).style.display='block';if(t==='revenue')loadRevenue();if(t==='sync')renderIcalConfig();if(t==='exceptions')loadConflicts();}
 function loadStats(){const today=new Date().toISOString().slice(0,10);const ms=new Date();ms.setDate(1);const msStr=ms.toISOString().slice(0,10);const nm=new Date(ms);nm.setMonth(nm.getMonth()+1);const nmStr=nm.toISOString().slice(0,10);const mb=DB.bookings.filter(b=>b.check_in<nmStr&&b.check_out>msStr);const ti=DB.bookings.filter(b=>b.check_in<=today&&b.check_out>today&&b.status==='confirmed').length;const ps={};mb.forEach(b=>{const p=b.platform||'direct';ps[p]=(ps[p]||0)+1;});const pa=Object.entries(ps).map(([platform,c])=>({platform,c}));const we=new Date();we.setDate(we.getDate()+7);const weStr=we.toISOString().slice(0,10);const up=DB.bookings.filter(b=>b.check_in>=today&&b.check_in<=weStr&&b.status==='confirmed').sort((a,b)=>a.check_in.localeCompare(b.check_in));let ph=pa.length?pa.map(p=>'<span class="platform-badge '+p.platform+'">'+(pMap[p.platform]||p.platform)+' '+p.c+'</span>').join(' '):'<span style="color:var(--text2);font-size:13px">本月暂无预订</span>';document.getElementById('statsBar').innerHTML='<div class="stat-card"><div class="stat-icon" style="background:var(--primary-light);color:var(--primary)">📅</div><div><div class="stat-val">'+mb.length+'</div><div class="stat-label">本月预订</div></div></div><div class="stat-card"><div class="stat-icon" style="background:#fef3c7;color:var(--orange)">🔑</div><div><div class="stat-val">'+ti+'</div><div class="stat-label">今日在住</div></div></div><div class="stat-card" style="min-width:280px"><div class="stat-icon" style="background:#f0fdf4;color:var(--green)">📊</div><div><div class="stat-label" style="margin-bottom:4px">平台分布</div><div>'+ph+'</div></div></div><div class="stat-card" style="min-width:200px"><div class="stat-icon" style="background:#fef2f2;color:var(--red)">⏰</div><div><div class="stat-val">'+up.length+'</div><div class="stat-label">7天内将入住</div></div></div>';}
 function loadCalendar(){renderCalendar();}
-function renderCalendar(){const y=currentMonth.getFullYear(),m=currentMonth.getMonth();const today=new Date();today.setHours(0,0,0,0);const todayStr=today.toISOString().slice(0,10);const mn=['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];document.getElementById('monthTitle').textContent=y+'年 '+mn[m];const dim=new Date(y,m+1,0).getDate();const dn=['日','一','二','三','四','五','六'];let html='<thead><tr><th class="room-label" style="text-align:left">房间</th>';for(let d=1;d<=dim;d++){const ds=y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');const di=new Date(y,m,d).getDay();const isT=ds===todayStr;const isW=di===0||di===6;html+='<th class="cal-day-header '+(isT?'today':'')+'"><div class="day-num">'+d+'</div><div class="day-name" style="'+(isW?'color:var(--red)':'')+'">'+dn[di]+'</div></th>';}html+='</tr></thead><tbody>';DB.rooms.forEach(room=>{html+='<tr><td class="room-label"><div class="room-icon">🚪</div>'+room.name+'</td>';for(let d=1;d<=dim;d++){const ds=y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');const isT=ds===todayStr;const bks=DB.bookings.filter(b=>b.room_id===room.id&&b.status!=='cancelled'&&ds>=b.check_in&&ds<b.check_out);let cc='';if(bks.length>0){const b=bks[0];const pc='platform-'+(b.platform||'direct');const pd=b.parking_spot_id?'<div class="parking-dot"></div>':'';const pl=pMap[b.platform]||b.platform||'';const pL=parkName(b.parking_spot_id)?'🚗'+parkName(b.parking_spot_id):'';const rL=b.remark?'📝 '+b.remark:'';const prL=b.price?'💰 ¥'+b.price:'';const tip=[b.guest_name,b.check_in+' → '+b.check_out,roomName(b.room_id)+' · '+pl,pL,prL,b.phone?'📞 '+b.phone:'',rL].filter(Boolean).join('\\n');if(ds===b.check_in){cc='<div class="booking-block '+pc+'" onclick="event.stopPropagation();editBooking('+b.id+')" title="'+tip+'">'+pd+'<div class="guest">'+b.guest_name+'</div><div class="meta">'+b.check_in.slice(5)+' → '+b.check_out.slice(5)+' · '+pl+'</div>'+(prL?'<div class="parking-line">'+prL+'</div>':'')+(pL?'<div class="parking-line">'+pL+'</div>':'')+(rL?'<div class="remark-line">📝 '+b.remark+'</div>':'')+'</div>';}else{cc='<div class="booking-block '+pc+'" onclick="event.stopPropagation();editBooking('+b.id+')" title="'+tip+'">'+pd+'<div class="guest">↳ '+b.guest_name+'</div>'+(prL?'<div class="parking-line">'+prL+'</div>':'')+(rL?'<div class="remark-line">📝 '+b.remark+'</div>':'')+'</div>';}}html+='<td class="cal-cell '+(isT?'today':'')+'" onclick="quickBook('+room.id+',\''+ds+'\')">'+cc+'</td>';}html+='</tr>';});html+='</tbody>';document.getElementById('calendarTable').innerHTML=html;}
+function renderCalendar(){const y=currentMonth.getFullYear(),m=currentMonth.getMonth();const today=new Date();today.setHours(0,0,0,0);const todayStr=today.toISOString().slice(0,10);const mn=['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];document.getElementById('monthTitle').textContent=y+'年 '+mn[m];const dim=new Date(y,m+1,0).getDate();const dn=['日','一','二','三','四','五','六'];let html='<thead><tr><th class="room-label" style="text-align:left">房间</th>';for(let d=1;d<=dim;d++){const ds=y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');const di=new Date(y,m,d).getDay();const isT=ds===todayStr;const isW=di===0||di===6;html+='<th class="cal-day-header '+(isT?'today':'')+'"><div class="day-num">'+d+'</div><div class="day-name" style="'+(isW?'color:var(--red)':'')+'">'+dn[di]+'</div></th>';}html+='</tr></thead><tbody>';DB.rooms.forEach(room=>{html+='<tr><td class="room-label"><div class="room-icon">🚪</div>'+room.name+'</td>';for(let d=1;d<=dim;d++){const ds=y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');const isT=ds===todayStr;const bks=DB.bookings.filter(b=>b.room_id===room.id&&b.status!=='cancelled'&&ds>=b.check_in&&ds<b.check_out);let cc='';if(bks.length>0){const b=bks[0];const pc='platform-'+(b.platform||'direct')+(b.status==='blocked'?' status-blocked':'');const pd=b.parking_spot_id?'<div class="parking-dot"></div>':'';const pl=pMap[b.platform]||b.platform||'';const pL=parkName(b.parking_spot_id)?'🚗'+parkName(b.parking_spot_id):'';const rL=b.remark?'📝 '+b.remark:'';const prL=b.price?'💰 ¥'+b.price:'';const tip=[b.guest_name,b.check_in+' → '+b.check_out,roomName(b.room_id)+' · '+pl,pL,prL,b.phone?'📞 '+b.phone:'',rL].filter(Boolean).join('\\n');if(ds===b.check_in){cc='<div class="booking-block '+pc+'" onclick="event.stopPropagation();editBooking('+b.id+')" title="'+tip+'">'+pd+'<div class="guest">'+b.guest_name+'</div><div class="meta">'+b.check_in.slice(5)+' → '+b.check_out.slice(5)+' · '+pl+'</div>'+(prL?'<div class="parking-line">'+prL+'</div>':'')+(pL?'<div class="parking-line">'+pL+'</div>':'')+(rL?'<div class="remark-line">📝 '+b.remark+'</div>':'')+'</div>';}else{cc='<div class="booking-block '+pc+'" onclick="event.stopPropagation();editBooking('+b.id+')" title="'+tip+'">'+pd+'<div class="guest">↳ '+b.guest_name+'</div>'+(prL?'<div class="parking-line">'+prL+'</div>':'')+(rL?'<div class="remark-line">📝 '+b.remark+'</div>':'')+'</div>';}}html+='<td class="cal-cell '+(isT?'today':'')+'" onclick="quickBook('+room.id+',\''+ds+'\')">'+cc+'</td>';}html+='</tr>';});html+='</tbody>';document.getElementById('calendarTable').innerHTML=html;}
 function changeMonth(d){currentMonth.setMonth(currentMonth.getMonth()+d);loadCalendar();}
 function goToday(){currentMonth=new Date();loadCalendar();}
 function openBookingModal(b){document.getElementById('modalTitle').textContent=b?'编辑预订':'新增预订';document.getElementById('bookingId').value=b?b.id:'';document.getElementById('guestName').value=b?b.guest_name:'';document.getElementById('roomId').value=b?b.room_id:(DB.rooms[0]?.id||'');document.getElementById('platform').value=b?(b.platform||'direct'):'direct';document.getElementById('checkIn').value=b?b.check_in:'';document.getElementById('checkOut').value=b?b.check_out:'';document.getElementById('parkingSpot').value=b?(b.parking_spot_id||''):'';document.getElementById('phone').value=b?(b.phone||''):'';document.getElementById('price').value=b?(b.price||''):'';document.getElementById('remark').value=b?(b.remark||''):'';document.getElementById('status').value=b?(b.status||'confirmed'):'confirmed';document.getElementById('deleteBtn').style.display=b?'inline-flex':'none';document.getElementById('bookingModal').classList.add('show');}
