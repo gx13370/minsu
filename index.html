@@ -670,12 +670,12 @@ let calDrag={active:false,roomId:null,startDate:null,endDate:null,moved:false,ha
 function initCalDrag(){
   const table=document.getElementById('calendarTable');
   if(!table)return;
-  table.addEventListener('mousedown',function(e){
-    if(e.button!==0)return;
-    if(e.target.closest('.booking-block'))return;
-    const cell=e.target.closest('.cal-cell');
+  table.addEventListener('mousedown',function(ev){
+    if(ev.button!==0)return;
+    if(ev.target.closest('.booking-block'))return;
+    const cell=ev.target.closest('.cal-cell');
     if(!cell||!cell.dataset.room)return;
-    e.preventDefault();
+    ev.preventDefault();
     calDrag.active=true;
     calDrag.roomId=cell.dataset.room;
     calDrag.startDate=cell.dataset.date;
@@ -685,9 +685,9 @@ function initCalDrag(){
     cell.classList.add('cal-drag-origin');
     calHighlight();
   });
-  table.addEventListener('mouseover',function(e){
+  table.addEventListener('mouseover',function(ev){
     if(!calDrag.active)return;
-    const cell=e.target.closest('.cal-cell');
+    const cell=ev.target.closest('.cal-cell');
     if(!cell||cell.dataset.room!==calDrag.roomId)return;
     const newEnd=cell.dataset.date;
     if(newEnd===calDrag.endDate)return;
@@ -695,69 +695,70 @@ function initCalDrag(){
     calDrag.moved=true;
     if(cell.querySelector('.booking-block'))calDrag.hasBooking=true;
     calHighlight();
-    calShowTip(e);
+    calShowTip(ev);
   });
-  document.addEventListener('mouseup',function(e){
+  document.addEventListener('mouseup',function(ev){
     if(!calDrag.active)return;
-    const{roomId,startDate,endDate,moved,hasBooking}=calDrag;
+    const dr=calDrag.roomId,ds=calDrag.startDate,de=calDrag.endDate,dm=calDrag.moved,dh=calDrag.hasBooking;
     calDrag.active=false;
-    document.querySelectorAll('.cal-drag-origin').forEach(c=>c.classList.remove('cal-drag-origin'));
+    document.querySelectorAll('.cal-drag-origin').forEach(function(c){c.classList.remove('cal-drag-origin');});
     calClearHighlight();
     calHideTip();
-    if(moved&&startDate!==endDate){
-      let ci=startDate,co=endDate;
-      if(co<ci){const t=ci;ci=co;co=t;}
-      const nd=new Date(co);nd.setDate(nd.getDate()+1);
-      const coStr=localDateStr(nd);
-      if(hasBooking){
-        if(!confirm('选中的日期范围内已有预订，是否继续创建新预订？'))return;
+    if(dm&&ds!==de){
+      var ci=ds,co=de;
+      if(co<ci){var t=ci;ci=co;co=t;}
+      var nd=new Date(co);nd.setDate(nd.getDate()+1);
+      var coStr=localDateStr(nd);
+      if(dh){
+        if(!confirm('\u9009\u4e2d\u7684\u65e5\u671f\u8303\u56f4\u5185\u5df2\u6709\u9884\u8ba2\uff0c\u662f\u5426\u7ee7\u7eed\u521b\u5efa\u65b0\u9884\u8ba2\uff1f'))return;
       }
       openBookingModal(null);
-      document.getElementById('roomId').value=roomId;
+      document.getElementById('roomId').value=dr;
       document.getElementById('checkIn').value=ci;
       document.getElementById('checkOut').value=coStr;
       setTimeout(function(){updateNightsDisplay();document.getElementById('guestName').focus();},80);
     }else{
-      quickBook(parseInt(roomId),startDate);
+      quickBook(parseInt(dr),ds);
     }
   });
-  document.addEventListener('mousemove',function(e){
-    if(calDrag.active)calShowTip(e);
+  document.addEventListener('mousemove',function(ev){
+    if(calDrag.active)calShowTip(ev);
   });
 }
 function calHighlight(){
-  let s=calDrag.startDate,e=calDrag.endDate;
-  if(e<s){const t=s;s=e;e=t;}
+  var s=calDrag.startDate,ed=calDrag.endDate;
+  if(ed<s){var t=s;s=ed;ed=t;}
   document.querySelectorAll('.cal-cell[data-room="'+calDrag.roomId+'"]').forEach(function(cell){
-    const d=cell.dataset.date;
-    if(d>=s&&d<=e)cell.classList.add('cal-selecting');
+    var d=cell.dataset.date;
+    if(d>=s&&d<=ed)cell.classList.add('cal-selecting');
     else cell.classList.remove('cal-selecting');
   });
 }
 function calClearHighlight(){
   document.querySelectorAll('.cal-selecting').forEach(function(c){c.classList.remove('cal-selecting');});
 }
-function calShowTip(e){
-  const tip=document.getElementById('calDragTip');
+function calShowTip(ev){
+  var tip=document.getElementById('calDragTip');
   if(!tip||!calDrag.active)return;
-  let s=calDrag.startDate,e=calDrag.endDate;
-  if(e<s){const t=s;s=e;e=t;}
-  const nd=new Date(e);nd.setDate(nd.getDate()+1);
-  const nights=Math.round((new Date(nd)-new Date(s))/(86400000));
-  const roomName=DB.rooms.find(function(r){return String(r.id)===String(calDrag.roomId);});
-  const rn=roomName?roomName.name:'';
-  const fmt=function(ds){const p=ds.split('-');return p[1]+'/'+p[2];};
-  let html='<span style="font-size:15px">'+fmt(s)+' \u2192 '+fmt(nd.toISOString().slice(0,10))+'</span>';
-  if(nights>0)html+='<span style="margin-left:8px;opacity:.85">\u5171 '+nights+' \u665a</span>';
-  if(rn)html+='<span style="margin-left:8px;opacity:.7">'+rn+'</span>';
-  if(calDrag.hasBooking)html+='<span style="margin-left:8px;color:#fde047">\u26a0 \u5df2\u6709\u9884\u8ba2</span>';
-  tip.innerHTML=html;
+  var s=calDrag.startDate,ed=calDrag.endDate;
+  if(ed<s){var t=s;s=ed;ed=t;}
+  var nd=new Date(ed);nd.setDate(nd.getDate()+1);
+  var ndStr=localDateStr(nd);
+  var nights=Math.round((new Date(ndStr)-new Date(s))/(86400000));
+  var roomObj=DB.rooms.find(function(r){return String(r.id)===String(calDrag.roomId);});
+  var rn=roomObj?roomObj.name:'';
+  var fmt=function(ds){var p=ds.split('-');return p[1]+'/'+p[2];};
+  var tipHtml='<span style="font-size:15px">'+fmt(s)+' \u2192 '+fmt(ndStr)+'</span>';
+  if(nights>0)tipHtml+='<span style="margin-left:8px;opacity:.85">\u5171 '+nights+' \u665a</span>';
+  if(rn)tipHtml+='<span style="margin-left:8px;opacity:.7">'+rn+'</span>';
+  if(calDrag.hasBooking)tipHtml+='<span style="margin-left:8px;color:#fde047">\u26a0 \u5df2\u6709\u9884\u8ba2</span>';
+  tip.innerHTML=tipHtml;
   tip.style.display='block';
-  tip.style.left=(e.clientX+16)+'px';
-  tip.style.top=(e.clientY-32)+'px';
+  tip.style.left=(ev.clientX+16)+'px';
+  tip.style.top=(ev.clientY-32)+'px';
 }
 function calHideTip(){
-  const tip=document.getElementById('calDragTip');
+  var tip=document.getElementById('calDragTip');
   if(tip)tip.style.display='none';
 }
 
