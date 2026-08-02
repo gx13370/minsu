@@ -683,15 +683,15 @@ const MNAMES=['1月','2月','3月','4月','5月','6月','7月','8月','9月','10
 
 function switchRevTab(t){revTab=t;document.querySelectorAll('.rev-sub-tab').forEach(x=>x.classList.toggle('active',x.dataset.rev===t));loadRevenue();}
 
-function calcRev(bks){let c=0,g=0,cm=0,n=0;bks.forEach(b=>{c++;g+=b.price||0;const p=b.platform||'direct';const comm=(p==='booking'||p==='airbnb')?(b.price||0)*0.15:0;cm+=comm;n+=(b.price||0)-comm;});return{count:c,gross:g,commission:cm,net:n};}
+function calcRev(bks){let c=0,g=0,cm=0,n=0;bks.forEach(b=>{c++;g+=b.price||0;const p=b.platform||'direct';const comm=(p==='airbnb')?(b.price||0)*0.186:(p==='booking')?(b.price||0)*0.166:0;cm+=comm;n+=(b.price||0)-comm;});return{count:c,gross:g,commission:cm,net:n};}
 
-function groupByRoom(bks){const r={};bks.forEach(b=>{const rid=b.room_id;if(!r[rid])r[rid]={id:rid,name:roomName(rid),count:0,gross:0,commission:0,net:0};r[rid].count++;r[rid].gross+=b.price||0;const p=b.platform||'direct';const comm=(p==='booking'||p==='airbnb')?(b.price||0)*0.15:0;r[rid].commission+=comm;r[rid].net+=(b.price||0)-comm;});return Object.values(r).sort((a,b)=>b.net-a.net);}
+function groupByRoom(bks){const r={};bks.forEach(b=>{const rid=b.room_id;if(!r[rid])r[rid]={id:rid,name:roomName(rid),count:0,gross:0,commission:0,net:0};r[rid].count++;r[rid].gross+=b.price||0;const p=b.platform||'direct';const comm=(p==='airbnb')?(b.price||0)*0.186:(p==='booking')?(b.price||0)*0.166:0;r[rid].commission+=comm;r[rid].net+=(b.price||0)-comm;});return Object.values(r).sort((a,b)=>b.net-a.net);}
 
-function groupByPlatform(bks){const p={};bks.forEach(b=>{const k=b.platform||'direct';if(!p[k])p[k]={key:k,label:pMapFull[k]||k,count:0,gross:0,commission:0,net:0};p[k].count++;p[k].gross+=b.price||0;const comm=(k==='booking'||k==='airbnb')?(b.price||0)*0.15:0;p[k].commission+=comm;p[k].net+=(b.price||0)-comm;});return Object.values(p);}
+function groupByPlatform(bks){const p={};bks.forEach(b=>{const k=b.platform||'direct';if(!p[k])p[k]={key:k,label:pMapFull[k]||k,count:0,gross:0,commission:0,net:0};p[k].count++;p[k].gross+=b.price||0;const comm=(k==='airbnb')?(b.price||0)*0.186:(k==='booking')?(b.price||0)*0.166:0;p[k].commission+=comm;p[k].net+=(b.price||0)-comm;});return Object.values(p);}
 
 function summaryCards(r,label){return '<div class="rev-summary">'+
   '<div class="rev-summary-card"><div class="rev-summary-icon" style="background:var(--primary-light);color:var(--primary)">💵</div><div><div class="rev-summary-val">£'+r.gross.toFixed(2)+'</div><div class="rev-summary-label">订单总额 ('+r.count+'单)</div></div></div>'+
-  '<div class="rev-summary-card"><div class="rev-summary-icon" style="background:#fef2f2;color:var(--red)">📉</div><div><div class="rev-summary-val" style="color:var(--red)">£'+r.commission.toFixed(2)+'</div><div class="rev-summary-label">平台抽佣 (15%)</div></div></div>'+
+  '<div class="rev-summary-card"><div class="rev-summary-icon" style="background:#fef2f2;color:var(--red)">📉</div><div><div class="rev-summary-val" style="color:var(--red)">£'+r.commission.toFixed(2)+'</div><div class="rev-summary-label">平台抽佣 (Airbnb 18.6%/Booking 16.6%)</div></div></div>'+
   '<div class="rev-summary-card"><div class="rev-summary-icon" style="background:#f0fdf4;color:var(--green)">💰</div><div><div class="rev-summary-val" style="color:var(--green)">£'+r.net.toFixed(2)+'</div><div class="rev-summary-label">实际到手</div></div></div>'+
   '<div class="rev-summary-card"><div class="rev-summary-icon" style="background:#fffbeb;color:var(--orange)">📊</div><div><div class="rev-summary-val">'+r.count+'</div><div class="rev-summary-label">'+label+'</div></div></div>'+
   '</div>';}
@@ -700,7 +700,7 @@ function roomCards(rv){let h='<div class="rev-section"><div class="rev-section-t
   if(rv.length===0){h+='<div class="empty"><div class="icon">📭</div><div>该时段暂无已确认的预订</div></div>';}
   else{rv.forEach(r=>{h+='<div class="rev-card"><div class="rev-card-header"><span style="font-size:15px;font-weight:700">🚪 '+r.name+'</span><span style="font-size:12px;color:var(--text2)">'+r.count+' 单</span></div>'+
     '<div class="rev-row"><span>订单总额</span><span class="rev-val">£'+r.gross.toFixed(2)+'</span></div>'+
-    '<div class="rev-row"><span>平台抽佣 (15%)</span><span class="rev-val" style="color:var(--red)">- £'+r.commission.toFixed(2)+'</span></div>'+
+    '<div class="rev-row"><span>平台抽佣 (Airbnb 18.6%/Booking 16.6%)</span><span class="rev-val" style="color:var(--red)">- £'+r.commission.toFixed(2)+'</span></div>'+
     '<div class="rev-row rev-net"><span>实际到手</span><span class="rev-val" style="color:var(--green)">£'+r.net.toFixed(2)+'</span></div></div>';});}
   h+='</div></div>';return h;}
 
@@ -709,7 +709,7 @@ function platformCards(pv){let h='<div class="rev-section"><div class="rev-secti
   else{pv.forEach(p=>{const bc=p.key==='booking'?'booking':p.key==='airbnb'?'airbnb':'direct';
     h+='<div class="rev-card"><div class="rev-card-header"><span class="platform-badge '+bc+'">'+p.label+'</span><span style="font-size:12px;color:var(--text2)">'+p.count+' 单</span></div>'+
     '<div class="rev-row"><span>订单总额</span><span class="rev-val">£'+p.gross.toFixed(2)+'</span></div>'+
-    '<div class="rev-row"><span>平台抽佣 (15%)</span><span class="rev-val" style="color:var(--red)">- £'+p.commission.toFixed(2)+'</span></div>'+
+    '<div class="rev-row"><span>平台抽佣 (Airbnb 18.6%/Booking 16.6%)</span><span class="rev-val" style="color:var(--red)">- £'+p.commission.toFixed(2)+'</span></div>'+
     '<div class="rev-row rev-net"><span>实际到手</span><span class="rev-val" style="color:var(--green)">£'+p.net.toFixed(2)+'</span></div></div>';});}
   h+='</div></div>';return h;}
 
@@ -720,7 +720,7 @@ function roomMonthMatrix(bks,months){
     if(!rd[rid])rd[rid]={name:roomName(rid),months:{}};
     if(!rd[rid].months[bm])rd[rid].months[bm]={gross:0,net:0,count:0};
     rd[rid].months[bm].gross+=b.price||0;rd[rid].months[bm].count++;
-    const p=b.platform||'direct';const comm=(p==='booking'||p==='airbnb')?(b.price||0)*0.15:0;
+    const p=b.platform||'direct';const comm=(p==='airbnb')?(b.price||0)*0.186:(p==='booking')?(b.price||0)*0.166:0;
     rd[rid].months[bm].net+=(b.price||0)-comm;
     mt[bm].gross+=b.price||0;mt[bm].net+=(b.price||0)-comm;mt[bm].count++;
     gg+=b.price||0;gn+=(b.price||0)-comm;gc++;});
@@ -753,7 +753,7 @@ function loadRevenue(){
 
     // Yearly breakdown
     const yMap={};
-    allBks.forEach(b=>{const by=b.check_in.slice(0,4);if(!yMap[by])yMap[by]={year:by,count:0,gross:0,commission:0,net:0};yMap[by].count++;yMap[by].gross+=b.price||0;const p=b.platform||'direct';const comm=(p==='booking'||p==='airbnb')?(b.price||0)*0.15:0;yMap[by].commission+=comm;yMap[by].net+=(b.price||0)-comm;});
+    allBks.forEach(b=>{const by=b.check_in.slice(0,4);if(!yMap[by])yMap[by]={year:by,count:0,gross:0,commission:0,net:0};yMap[by].count++;yMap[by].gross+=b.price||0;const p=b.platform||'direct';const comm=(p==='airbnb')?(b.price||0)*0.186:(p==='booking')?(b.price||0)*0.166:0;yMap[by].commission+=comm;yMap[by].net+=(b.price||0)-comm;});
     const yList=Object.values(yMap).sort((a,b)=>b.year.localeCompare(a.year));
     html+='<div class="rev-section"><div class="rev-section-title">📅 年度收益</div>';
     if(yList.length===0){html+='<div class="empty"><div class="icon">📭</div><div>暂无收益数据</div></div>';}
@@ -765,7 +765,7 @@ function loadRevenue(){
 
     // Quarterly breakdown
     const qMap={};
-    allBks.forEach(b=>{const by=b.check_in.slice(0,4);const bm=parseInt(b.check_in.slice(5,7));const q=Math.ceil(bm/3);const qk=by+'-Q'+q;if(!qMap[qk])qMap[qk]={key:qk,year:by,quarter:q,count:0,gross:0,commission:0,net:0};qMap[qk].count++;qMap[qk].gross+=b.price||0;const p=b.platform||'direct';const comm=(p==='booking'||p==='airbnb')?(b.price||0)*0.15:0;qMap[qk].commission+=comm;qMap[qk].net+=(b.price||0)-comm;});
+    allBks.forEach(b=>{const by=b.check_in.slice(0,4);const bm=parseInt(b.check_in.slice(5,7));const q=Math.ceil(bm/3);const qk=by+'-Q'+q;if(!qMap[qk])qMap[qk]={key:qk,year:by,quarter:q,count:0,gross:0,commission:0,net:0};qMap[qk].count++;qMap[qk].gross+=b.price||0;const p=b.platform||'direct';const comm=(p==='airbnb')?(b.price||0)*0.186:(p==='booking')?(b.price||0)*0.166:0;qMap[qk].commission+=comm;qMap[qk].net+=(b.price||0)-comm;});
     const qList=Object.values(qMap).sort((a,b)=>b.key.localeCompare(a.key));
     html+='<div class="rev-section"><div class="rev-section-title">📅 季度收益</div>';
     if(qList.length===0){html+='<div class="empty"><div class="icon">📭</div><div>暂无收益数据</div></div>';}
@@ -776,7 +776,7 @@ function loadRevenue(){
 
     // Monthly breakdown
     const mMap={};
-    allBks.forEach(b=>{const bm=b.check_in.slice(0,7);if(!mMap[bm])mMap[bm]={month:bm,count:0,gross:0,commission:0,net:0};mMap[bm].count++;mMap[bm].gross+=b.price||0;const p=b.platform||'direct';const comm=(p==='booking'||p==='airbnb')?(b.price||0)*0.15:0;mMap[bm].commission+=comm;mMap[bm].net+=(b.price||0)-comm;});
+    allBks.forEach(b=>{const bm=b.check_in.slice(0,7);if(!mMap[bm])mMap[bm]={month:bm,count:0,gross:0,commission:0,net:0};mMap[bm].count++;mMap[bm].gross+=b.price||0;const p=b.platform||'direct';const comm=(p==='airbnb')?(b.price||0)*0.186:(p==='booking')?(b.price||0)*0.166:0;mMap[bm].commission+=comm;mMap[bm].net+=(b.price||0)-comm;});
     const mList=Object.values(mMap).sort((a,b)=>b.month.localeCompare(a.month));
     html+='<div class="rev-section"><div class="rev-section-title">📅 月度收益明细</div>';
     if(mList.length===0){html+='<div class="empty"><div class="icon">📭</div><div>暂无收益数据</div></div>';}
@@ -805,7 +805,7 @@ function loadRevenue(){
     if(bks.length===0){html+='<div class="empty"><div class="icon">📭</div><div>本月暂无已确认的预订</div></div>';}
     else{const sorted=bks.sort((a,b)=>a.check_in.localeCompare(b.check_in));
       html+='<div style="background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:auto"><table class="rev-table"><thead><tr><th>入住</th><th>退房</th><th>房间</th><th>客人</th><th>平台</th><th class="num">总价</th><th class="num">抽佣</th><th class="num">到手</th></tr></thead><tbody>';
-      sorted.forEach(b=>{const p=b.platform||'direct';const comm=(p==='booking'||p==='airbnb')?(b.price||0)*0.15:0;const net=(b.price||0)-comm;const bc=p==='booking'?'booking':p==='airbnb'?'airbnb':'direct';
+      sorted.forEach(b=>{const p=b.platform||'direct';const comm=(p==='airbnb')?(b.price||0)*0.186:(p==='booking')?(b.price||0)*0.166:0;const net=(b.price||0)-comm;const bc=p==='booking'?'booking':p==='airbnb'?'airbnb':'direct';
         html+='<tr><td>'+b.check_in+'</td><td>'+b.check_out+'</td><td>🚪 '+roomName(b.room_id)+'</td><td>'+b.guest_name+'</td><td><span class="platform-badge '+bc+'">'+(pMap[p]||p)+'</span></td><td class="num">£'+(b.price||0).toFixed(2)+'</td><td class="num" style="color:var(--red)">'+(comm?'- £'+comm.toFixed(2):'-')+'</td><td class="num" style="color:var(--green);font-weight:600">£'+net.toFixed(2)+'</td></tr>';});
       html+='<tr class="total-row"><td colspan="5">合计</td><td class="num">£'+r.gross.toFixed(2)+'</td><td class="num" style="color:var(--red)">- £'+r.commission.toFixed(2)+'</td><td class="num" style="color:var(--green)">£'+r.net.toFixed(2)+'</td></tr>';
       html+='</tbody></table></div>';}
