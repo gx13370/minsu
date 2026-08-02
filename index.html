@@ -13,7 +13,7 @@
 .main{padding:0 24px 24px}.tabs{display:flex;gap:4px;margin-bottom:16px;border-bottom:2px solid var(--border)}.tab{padding:10px 20px;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;font-weight:500;color:var(--text2);transition:all .2s}.tab.active{color:var(--primary);border-bottom-color:var(--primary)}.tab:hover{color:var(--primary)}
 .calendar-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}.month-nav{display:flex;align-items:center;gap:12px}.month-nav button{border:1px solid var(--border);background:var(--card);border-radius:8px;padding:6px 14px;cursor:pointer;font-size:14px;transition:all .2s}.month-nav button:hover{background:var(--primary-light);border-color:var(--primary)}.month-title{font-size:18px;font-weight:700;min-width:140px;text-align:center}
 .calendar-wrap{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:auto;max-height:750px}.calendar-table{border-collapse:collapse;width:100%;min-width:1400px}.calendar-table th,.calendar-table td{border:1px solid var(--border);padding:0;vertical-align:top}.calendar-table th{background:#f8fafc;padding:8px 4px;font-size:13px;font-weight:600;color:var(--text2);text-align:center;position:sticky;top:0;z-index:5}.cal-day-header{min-width:120px;width:120px}.cal-day-header.today{background:var(--primary-light);color:var(--primary)}.cal-day-header .day-num{font-size:18px;font-weight:700;color:var(--text)}.cal-day-header .day-name{font-size:11px;text-transform:uppercase}.cal-day-header.today .day-num{color:var(--primary)}
-.room-label{padding:10px 14px;font-weight:600;background:#f8fafc;position:sticky;left:0;z-index:3;min-width:100px;font-size:14px}.room-label .room-icon{font-size:20px;margin-bottom:2px}.cal-cell{height:100px;cursor:pointer;position:relative;transition:background .15s}.cal-cell:hover{background:var(--primary-light)}.cal-cell.today{background:#fef3c7}.cal-cell.today:hover{background:#fde68a}
+.room-label{padding:10px 14px;font-weight:600;background:#f8fafc;position:sticky;left:0;z-index:3;min-width:100px;font-size:14px}.room-label .room-icon{font-size:20px;margin-bottom:2px}.cal-cell{height:100px;cursor:pointer;position:relative;transition:background .15s}.cal-cell:hover{background:var(--primary-light)}.cal-cell.cal-selecting{background:#dbeafe!important;outline:2px solid var(--primary);outline-offset:-2px;cursor:grabbing}.cal-cell.cal-selecting::after{content:"";position:absolute;inset:0;background:rgba(59,130,246,0.18);pointer-events:none}.cal-cell.cal-drag-origin{outline:3px solid var(--primary);outline-offset:-3px}#calDragTip{position:fixed;z-index:9999;background:var(--primary);color:#fff;padding:6px 14px;border-radius:8px;font-size:13px;font-weight:600;pointer-events:none;box-shadow:0 4px 12px rgba(0,0,0,0.2);white-space:nowrap;display:none}.cal-cell.today{background:#fef3c7}.cal-cell.today:hover{background:#fde68a}
 .booking-block{position:absolute;top:2px;left:2px;right:2px;bottom:2px;border-radius:6px;padding:6px 8px;font-size:13px;color:#fff;overflow:hidden;cursor:pointer;display:flex;flex-direction:column;justify-content:flex-start;gap:2px}.booking-block .guest{font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:13px}.booking-block .meta{font-size:11px;opacity:.9;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.booking-block .remark-line{font-size:11px;opacity:.95;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.booking-block .parking-line{font-size:11px;opacity:.9;white-space:nowrap}.booking-block.platform-booking{background:var(--booking-color)}.booking-block.platform-airbnb{background:var(--airbnb-color)}.booking-block.platform-direct{background:var(--direct-color)}.booking-block.status-blocked{background:#9ca3af;opacity:.7}.booking-block.status-blocked .guest{font-size:11px}.booking-block.status-staying{border:3px solid #16a34a;box-shadow:0 0 0 3px rgba(22,163,74,.45),0 0 14px rgba(22,163,74,.55);background:#15803d!important}.booking-block.status-staying .guest{font-weight:800;font-size:14px}.booking-block.status-staying::after{content:'● 在住';position:absolute;bottom:4px;right:5px;font-size:10px;font-weight:700;color:#fff;background:rgba(22,163,74,.95);padding:1px 5px;border-radius:4px;white-space:nowrap}booking-block .parking-dot{position:absolute;top:5px;right:5px;width:10px;height:10px;border-radius:50%;background:#fbbf24;border:1px solid rgba(255,255,255,.5)}
 .btn{border:none;border-radius:8px;padding:8px 16px;cursor:pointer;font-size:14px;font-weight:500;transition:all .2s;display:inline-flex;align-items:center;gap:6px}.btn-primary{background:var(--primary);color:#fff}.btn-primary:hover{background:#4338ca}.btn-outline{background:var(--card);border:1px solid var(--border);color:var(--text)}.btn-outline:hover{border-color:var(--primary);color:var(--primary)}.btn-danger{background:var(--red);color:#fff}.btn-danger:hover{background:#b91c1c}.btn-sm{padding:5px 12px;font-size:13px}
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);display:none;align-items:center;justify-content:center;z-index:1000;padding:20px}.modal-overlay.show{display:flex}.modal{background:var(--card);border-radius:16px;padding:24px;width:100%;max-width:520px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.15)}.modal h2{font-size:18px;margin-bottom:20px}.form-group{margin-bottom:16px}.form-group label{display:block;font-size:13px;font-weight:600;margin-bottom:6px;color:var(--text2)}.form-group label .req{color:var(--red)}.form-control{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:8px;font-size:14px;font-family:inherit;transition:border-color .2s}.form-control:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px var(--primary-light)}textarea.form-control{resize:vertical;min-height:70px}.form-row{display:flex;gap:12px}.form-row .form-group{flex:1}.modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:20px}
@@ -204,7 +204,8 @@
 <div class="stats-bar" id="statsBar"></div>
 <div class="main">
 <div class="tabs"><div class="tab active" data-tab="calendar" onclick="switchTab('calendar')">📅 日历视图</div><div class="tab" data-tab="list" onclick="switchTab('list')">📋 预订列表</div><div class="tab" data-tab="parking" onclick="switchTab('parking')">🚗 车位管理</div><div class="tab" data-tab="revenue" onclick="switchTab('revenue')">💰 收益统计</div><div class="tab" data-tab="sync" onclick="switchTab('sync')">🔄 iCal同步</div><div class="tab" data-tab="exceptions" onclick="switchTab('exceptions')">⚠️ 异常列表<span id="excBadge" style="display:none;background:var(--red);color:#fff;font-size:10px;padding:1px 6px;border-radius:10px;margin-left:4px"></span></div></div>
-<div id="tab-calendar"><div class="calendar-header"><div class="month-nav"><button onclick="changeMonth(-1)">◀ 上月</button><span class="month-title" id="monthTitle"></span><button onclick="changeMonth(1)">下月 ▶</button><button class="btn btn-outline btn-sm" onclick="goToday()">今天</button></div><div class="legend"><div class="legend-item"><div class="legend-dot" style="background:var(--booking-color)"></div>Booking</div><div class="legend-item"><div class="legend-dot" style="background:var(--airbnb-color)"></div>Airbnb</div><div class="legend-item"><div class="legend-dot" style="background:var(--direct-color)"></div>直客</div><div class="legend-item"><div class="legend-dot" style="background:#fbbf24;border-radius:50%"></div>有车位</div></div></div><div class="calendar-wrap"><table class="calendar-table" id="calendarTable"></table></div></div>
+<div id="tab-calendar"><div class="calendar-header"><div class="month-nav"><button onclick="changeMonth(-1)">◀ 上月</button><span class="month-title" id="monthTitle"></span><button onclick="changeMonth(1)">下月 ▶</button><button class="btn btn-outline btn-sm" onclick="goToday()">今天</button></div><div class="legend"><div class="legend-item"><div class="legend-dot" style="background:var(--booking-color)"></div>Booking</div><div class="legend-item"><div class="legend-dot" style="background:var(--airbnb-color)"></div>Airbnb</div><div class="legend-item"><div class="legend-dot" style="background:var(--direct-color)"></div>直客</div><div class="legend-item"><div class="legend-dot" style="background:#fbbf24;border-radius:50%"></div>有车位</div></div></div><div class="calendar-wrap"><table class="calendar-table" id="calendarTable"></table></div>
+<div id="calDragTip"></div></div>
 <div id="tab-list" style="display:none"><div class="filter-bar"><select id="filterRoom" onchange="loadBookings()"><option value="">全部房间</option></select><select id="filterPlatform" onchange="loadBookings()"><option value="">全部平台</option><option value="booking">Booking.com</option><option value="airbnb">Airbnb</option><option value="direct">直客</option></select><input type="month" id="filterMonth" onchange="loadBookings()"><button class="btn btn-outline btn-sm" onclick="clearFilters()">清除筛选</button></div><div class="booking-list" id="bookingList"></div></div>
 <div id="tab-parking" style="display:none"><div class="parking-date-picker"><label style="font-size:13px;font-weight:600;color:var(--text2);margin-right:8px">选择日期查看车位状态：</label><input type="date" id="parkingDate" onchange="loadParkingStatus()" style="padding:8px 12px;border:1px solid var(--border);border-radius:8px"></div><div class="parking-grid" id="parkingGrid"></div></div>
 <div id="tab-revenue" style="display:none"><div class="rev-sub-tabs" id="revSubTabs"><div class="rev-sub-tab active" data-rev="overview" onclick="switchRevTab('overview')">📊 全部总览</div><div class="rev-sub-tab" data-rev="monthly" onclick="switchRevTab('monthly')">📅 按月度</div><div class="rev-sub-tab" data-rev="quarterly" onclick="switchRevTab('quarterly')">📅 按季度</div><div class="rev-sub-tab" data-rev="yearly" onclick="switchRevTab('yearly')">📅 按年度</div></div><div id="revenueNav"></div><div id="revenueContent"></div></div>
@@ -664,7 +665,103 @@ function renderFilterRooms(){document.getElementById('filterRoom').innerHTML='<o
 function switchTab(t){document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));document.querySelector('.tab[data-tab="'+t+'"]').classList.add('active');document.querySelectorAll('[id^="tab-"]').forEach(el=>el.style.display='none');document.getElementById('tab-'+t).style.display='block';if(t==='revenue')loadRevenue();if(t==='sync')renderIcalConfig();if(t==='exceptions')loadConflicts();}
 function loadStats(){const today=localDateStr(new Date());const ms=new Date();ms.setDate(1);const msStr=localDateStr(ms);const nm=new Date(ms);nm.setMonth(nm.getMonth()+1);const nmStr=localDateStr(nm);const mb=DB.bookings.filter(b=>b.check_in<nmStr&&b.check_out>msStr);const ti=DB.bookings.filter(b=>b.check_in<=today&&b.check_out>today&&b.status==='confirmed').length;const ps={};mb.forEach(b=>{const p=b.platform||'direct';ps[p]=(ps[p]||0)+1;});const pa=Object.entries(ps).map(([platform,c])=>({platform,c}));const we=new Date();we.setDate(we.getDate()+7);const weStr=localDateStr(we);const up=DB.bookings.filter(b=>b.check_in>=today&&b.check_in<=weStr&&b.status==='confirmed').sort((a,b)=>a.check_in.localeCompare(b.check_in));let ph=pa.length?pa.map(p=>'<span class="platform-badge '+p.platform+'">'+(pMap[p.platform]||p.platform)+' '+p.c+'</span>').join(' '):'<span style="color:var(--text2);font-size:13px">本月暂无预订</span>';document.getElementById('statsBar').innerHTML='<div class="stat-card"><div class="stat-icon" style="background:var(--primary-light);color:var(--primary)">📅</div><div><div class="stat-val">'+mb.length+'</div><div class="stat-label">本月预订</div></div></div><div class="stat-card"><div class="stat-icon" style="background:#fef3c7;color:var(--orange)">🔑</div><div><div class="stat-val">'+ti+'</div><div class="stat-label">今日在住</div></div></div><div class="stat-card" style="min-width:280px"><div class="stat-icon" style="background:#f0fdf4;color:var(--green)">📊</div><div><div class="stat-label" style="margin-bottom:4px">平台分布</div><div>'+ph+'</div></div></div><div class="stat-card" style="min-width:200px"><div class="stat-icon" style="background:#fef2f2;color:var(--red)">⏰</div><div><div class="stat-val">'+up.length+'</div><div class="stat-label">7天内将入住</div></div></div>';}
 function loadCalendar(){renderCalendar();}
-function renderCalendar(){const y=currentMonth.getFullYear(),m=currentMonth.getMonth();const today=new Date();today.setHours(0,0,0,0);const todayStr=localDateStr(today);const mn=['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];document.getElementById('monthTitle').textContent=y+'年 '+mn[m];const dim=new Date(y,m+1,0).getDate();const dn=['日','一','二','三','四','五','六'];let html='<thead><tr><th class="room-label" style="text-align:left">房间</th>';for(let d=1;d<=dim;d++){const ds=y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');const di=new Date(y,m,d).getDay();const isT=ds===todayStr;const isW=di===0||di===6;html+='<th class="cal-day-header '+(isT?'today':'')+'"><div class="day-num">'+d+'</div><div class="day-name" style="'+(isW?'color:var(--red)':'')+'">'+dn[di]+'</div></th>';}html+='</tr></thead><tbody>';DB.rooms.forEach(room=>{html+='<tr><td class="room-label"><div class="room-icon">🚪</div>'+room.name+'</td>';for(let d=1;d<=dim;d++){const ds=y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');const isT=ds===todayStr;const bks=DB.bookings.filter(b=>b.room_id===room.id&&b.status!=='cancelled'&&ds>=b.check_in&&ds<b.check_out);let cc='';if(bks.length>0){const b=bks[0];const pc='platform-'+(b.platform||'direct')+(b.status==='blocked'?' status-blocked':'')+(b.status!=='cancelled'&&todayStr>=b.check_in&&todayStr<b.check_out?' status-staying':'');const pd=b.parking_spot_id?'<div class="parking-dot"></div>':'';const pl=pMap[b.platform]||b.platform||'';const pL=parkName(b.parking_spot_id)?'🚗'+parkName(b.parking_spot_id):'';const rL=b.remark?'📝 '+b.remark:'';const nN=calcBookingNights(b);const prL=b.price?'💰 £'+b.price+(nN>1?' ('+nN+'晚 £'+(b.price/nN).toFixed(0)+'/晚)':''):'';const tip=[b.guest_name,b.check_in+' → '+b.check_out,roomName(b.room_id)+' · '+pl,pL,prL,b.phone?'📞 '+b.phone:'',rL].filter(Boolean).join('\\n');if(ds===b.check_in){cc='<div class="booking-block '+pc+'" onclick="event.stopPropagation();editBooking('+b.id+')" title="'+tip+'">'+pd+'<div class="guest">'+b.guest_name+'</div><div class="meta">'+b.check_in.slice(5)+' → '+b.check_out.slice(5)+' · '+pl+'</div>'+(prL?'<div class="parking-line">'+prL+'</div>':'')+(pL?'<div class="parking-line">'+pL+'</div>':'')+(rL?'<div class="remark-line">📝 '+b.remark+'</div>':'')+'</div>';}else{cc='<div class="booking-block '+pc+'" onclick="event.stopPropagation();editBooking('+b.id+')" title="'+tip+'">'+pd+'<div class="guest">↳ '+b.guest_name+'</div>'+(prL?'<div class="parking-line">'+prL+'</div>':'')+(rL?'<div class="remark-line">📝 '+b.remark+'</div>':'')+'</div>';}}html+='<td class="cal-cell '+(isT?'today':'')+'" onclick="quickBook('+room.id+',\''+ds+'\')">'+cc+'</td>';}html+='</tr>';});html+='</tbody>';document.getElementById('calendarTable').innerHTML=html;}
+
+let calDrag={active:false,roomId:null,startDate:null,endDate:null,moved:false,hasBooking:false};
+function initCalDrag(){
+  const table=document.getElementById('calendarTable');
+  if(!table)return;
+  table.addEventListener('mousedown',function(e){
+    if(e.button!==0)return;
+    if(e.target.closest('.booking-block'))return;
+    const cell=e.target.closest('.cal-cell');
+    if(!cell||!cell.dataset.room)return;
+    e.preventDefault();
+    calDrag.active=true;
+    calDrag.roomId=cell.dataset.room;
+    calDrag.startDate=cell.dataset.date;
+    calDrag.endDate=cell.dataset.date;
+    calDrag.moved=false;
+    calDrag.hasBooking=false;
+    cell.classList.add('cal-drag-origin');
+    calHighlight();
+  });
+  table.addEventListener('mouseover',function(e){
+    if(!calDrag.active)return;
+    const cell=e.target.closest('.cal-cell');
+    if(!cell||cell.dataset.room!==calDrag.roomId)return;
+    const newEnd=cell.dataset.date;
+    if(newEnd===calDrag.endDate)return;
+    calDrag.endDate=newEnd;
+    calDrag.moved=true;
+    if(cell.querySelector('.booking-block'))calDrag.hasBooking=true;
+    calHighlight();
+    calShowTip(e);
+  });
+  document.addEventListener('mouseup',function(e){
+    if(!calDrag.active)return;
+    const{roomId,startDate,endDate,moved,hasBooking}=calDrag;
+    calDrag.active=false;
+    document.querySelectorAll('.cal-drag-origin').forEach(c=>c.classList.remove('cal-drag-origin'));
+    calClearHighlight();
+    calHideTip();
+    if(moved&&startDate!==endDate){
+      let ci=startDate,co=endDate;
+      if(co<ci){const t=ci;ci=co;co=t;}
+      const nd=new Date(co);nd.setDate(nd.getDate()+1);
+      const coStr=localDateStr(nd);
+      if(hasBooking){
+        if(!confirm('选中的日期范围内已有预订，是否继续创建新预订？'))return;
+      }
+      openBookingModal(null);
+      document.getElementById('roomId').value=roomId;
+      document.getElementById('checkIn').value=ci;
+      document.getElementById('checkOut').value=coStr;
+      setTimeout(function(){updateNightsDisplay();document.getElementById('guestName').focus();},80);
+    }else{
+      quickBook(parseInt(roomId),startDate);
+    }
+  });
+  document.addEventListener('mousemove',function(e){
+    if(calDrag.active)calShowTip(e);
+  });
+}
+function calHighlight(){
+  let s=calDrag.startDate,e=calDrag.endDate;
+  if(e<s){const t=s;s=e;e=t;}
+  document.querySelectorAll('.cal-cell[data-room="'+calDrag.roomId+'"]').forEach(function(cell){
+    const d=cell.dataset.date;
+    if(d>=s&&d<=e)cell.classList.add('cal-selecting');
+    else cell.classList.remove('cal-selecting');
+  });
+}
+function calClearHighlight(){
+  document.querySelectorAll('.cal-selecting').forEach(function(c){c.classList.remove('cal-selecting');});
+}
+function calShowTip(e){
+  const tip=document.getElementById('calDragTip');
+  if(!tip||!calDrag.active)return;
+  let s=calDrag.startDate,e=calDrag.endDate;
+  if(e<s){const t=s;s=e;e=t;}
+  const nd=new Date(e);nd.setDate(nd.getDate()+1);
+  const nights=Math.round((new Date(nd)-new Date(s))/(86400000));
+  const roomName=DB.rooms.find(function(r){return String(r.id)===String(calDrag.roomId);});
+  const rn=roomName?roomName.name:'';
+  const fmt=function(ds){const p=ds.split('-');return p[1]+'/'+p[2];};
+  let html='<span style="font-size:15px">'+fmt(s)+' \u2192 '+fmt(nd.toISOString().slice(0,10))+'</span>';
+  if(nights>0)html+='<span style="margin-left:8px;opacity:.85">\u5171 '+nights+' \u665a</span>';
+  if(rn)html+='<span style="margin-left:8px;opacity:.7">'+rn+'</span>';
+  if(calDrag.hasBooking)html+='<span style="margin-left:8px;color:#fde047">\u26a0 \u5df2\u6709\u9884\u8ba2</span>';
+  tip.innerHTML=html;
+  tip.style.display='block';
+  tip.style.left=(e.clientX+16)+'px';
+  tip.style.top=(e.clientY-32)+'px';
+}
+function calHideTip(){
+  const tip=document.getElementById('calDragTip');
+  if(tip)tip.style.display='none';
+}
+
+function renderCalendar(){const y=currentMonth.getFullYear(),m=currentMonth.getMonth();const today=new Date();today.setHours(0,0,0,0);const todayStr=localDateStr(today);const mn=['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];document.getElementById('monthTitle').textContent=y+'年 '+mn[m];const dim=new Date(y,m+1,0).getDate();const dn=['日','一','二','三','四','五','六'];let html='<thead><tr><th class="room-label" style="text-align:left">房间</th>';for(let d=1;d<=dim;d++){const ds=y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');const di=new Date(y,m,d).getDay();const isT=ds===todayStr;const isW=di===0||di===6;html+='<th class="cal-day-header '+(isT?'today':'')+'"><div class="day-num">'+d+'</div><div class="day-name" style="'+(isW?'color:var(--red)':'')+'">'+dn[di]+'</div></th>';}html+='</tr></thead><tbody>';DB.rooms.forEach(room=>{html+='<tr><td class="room-label"><div class="room-icon">🚪</div>'+room.name+'</td>';for(let d=1;d<=dim;d++){const ds=y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');const isT=ds===todayStr;const bks=DB.bookings.filter(b=>b.room_id===room.id&&b.status!=='cancelled'&&ds>=b.check_in&&ds<b.check_out);let cc='';if(bks.length>0){const b=bks[0];const pc='platform-'+(b.platform||'direct')+(b.status==='blocked'?' status-blocked':'')+(b.status!=='cancelled'&&todayStr>=b.check_in&&todayStr<b.check_out?' status-staying':'');const pd=b.parking_spot_id?'<div class="parking-dot"></div>':'';const pl=pMap[b.platform]||b.platform||'';const pL=parkName(b.parking_spot_id)?'🚗'+parkName(b.parking_spot_id):'';const rL=b.remark?'📝 '+b.remark:'';const nN=calcBookingNights(b);const prL=b.price?'💰 £'+b.price+(nN>1?' ('+nN+'晚 £'+(b.price/nN).toFixed(0)+'/晚)':''):'';const tip=[b.guest_name,b.check_in+' → '+b.check_out,roomName(b.room_id)+' · '+pl,pL,prL,b.phone?'📞 '+b.phone:'',rL].filter(Boolean).join('\\n');if(ds===b.check_in){cc='<div class="booking-block '+pc+'" onclick="event.stopPropagation();editBooking('+b.id+')" title="'+tip+'">'+pd+'<div class="guest">'+b.guest_name+'</div><div class="meta">'+b.check_in.slice(5)+' → '+b.check_out.slice(5)+' · '+pl+'</div>'+(prL?'<div class="parking-line">'+prL+'</div>':'')+(pL?'<div class="parking-line">'+pL+'</div>':'')+(rL?'<div class="remark-line">📝 '+b.remark+'</div>':'')+'</div>';}else{cc='<div class="booking-block '+pc+'" onclick="event.stopPropagation();editBooking('+b.id+')" title="'+tip+'">'+pd+'<div class="guest">↳ '+b.guest_name+'</div>'+(prL?'<div class="parking-line">'+prL+'</div>':'')+(rL?'<div class="remark-line">📝 '+b.remark+'</div>':'')+'</div>';}}html+='<td class="cal-cell '+(isT?'today':'')+'" data-room="'+room.id+'" data-date="'+ds+'">'+cc+'</td>';}html+='</tr>';});html+='</tbody>';document.getElementById('calendarTable').innerHTML=html;}
 function changeMonth(d){currentMonth.setMonth(currentMonth.getMonth()+d);loadCalendar();}
 function goToday(){currentMonth=new Date();loadCalendar();}
 function calcNights(){var ci=document.getElementById('checkIn').value;var co=document.getElementById('checkOut').value;if(!ci||!co)return 0;var d1=new Date(ci);var d2=new Date(co);return Math.round((d2-d1)/86400000);}
@@ -871,7 +968,7 @@ function saveRoomSettings(){let changed=false;DB.rooms.forEach(r=>{const nn=docu
 document.getElementById('bookingModal').addEventListener('click',function(e){if(e.target===this)closeBookingModal();});
 document.getElementById('roomModal').addEventListener('click',function(e){if(e.target===this)closeRoomModal();});
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeBookingModal();});
-function init(){loadDB();refreshAll();cloudSyncInit();setTimeout(autoIcalSync,8000);}
+function init(){loadDB();refreshAll();cloudSyncInit();initCalDrag();setTimeout(autoIcalSync,8000);}
 function autoIcalSync(){if(!isSyncing&&document.visibilityState==='visible'){const cfg=getIcalConfig();if(cfg&&cfg.length){try{syncAllIcal(true);}catch(e){}}}}
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&!isSyncing){syncFromCloud().then(u=>{if(u){refreshAll();toast('已从云端同步','success');updateSyncStatus('synced',new Date().toLocaleTimeString('zh-CN'));}});}});
 setInterval(()=>{if(!isSyncing&&document.visibilityState==='visible'){syncFromCloud().then(u=>{if(u){refreshAll();updateSyncStatus('synced',new Date().toLocaleTimeString('zh-CN'));}});}},30000);
