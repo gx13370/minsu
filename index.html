@@ -666,13 +666,13 @@ function switchTab(t){document.querySelectorAll('.tab').forEach(x=>x.classList.r
 function loadStats(){const today=localDateStr(new Date());const ms=new Date();ms.setDate(1);const msStr=localDateStr(ms);const nm=new Date(ms);nm.setMonth(nm.getMonth()+1);const nmStr=localDateStr(nm);const mb=DB.bookings.filter(b=>b.check_in<nmStr&&b.check_out>msStr);const ti=DB.bookings.filter(b=>b.check_in<=today&&b.check_out>today&&b.status==='confirmed').length;const ps={};mb.forEach(b=>{const p=b.platform||'direct';ps[p]=(ps[p]||0)+1;});const pa=Object.entries(ps).map(([platform,c])=>({platform,c}));const we=new Date();we.setDate(we.getDate()+7);const weStr=localDateStr(we);const up=DB.bookings.filter(b=>b.check_in>=today&&b.check_in<=weStr&&b.status==='confirmed').sort((a,b)=>a.check_in.localeCompare(b.check_in));let ph=pa.length?pa.map(p=>'<span class="platform-badge '+p.platform+'">'+(pMap[p.platform]||p.platform)+' '+p.c+'</span>').join(' '):'<span style="color:var(--text2);font-size:13px">本月暂无预订</span>';document.getElementById('statsBar').innerHTML='<div class="stat-card"><div class="stat-icon" style="background:var(--primary-light);color:var(--primary)">📅</div><div><div class="stat-val">'+mb.length+'</div><div class="stat-label">本月预订</div></div></div><div class="stat-card"><div class="stat-icon" style="background:#fef3c7;color:var(--orange)">🔑</div><div><div class="stat-val">'+ti+'</div><div class="stat-label">今日在住</div></div></div><div class="stat-card" style="min-width:280px"><div class="stat-icon" style="background:#f0fdf4;color:var(--green)">📊</div><div><div class="stat-label" style="margin-bottom:4px">平台分布</div><div>'+ph+'</div></div></div><div class="stat-card" style="min-width:200px"><div class="stat-icon" style="background:#fef2f2;color:var(--red)">⏰</div><div><div class="stat-val">'+up.length+'</div><div class="stat-label">7天内将入住</div></div></div>';}
 function loadCalendar(){renderCalendar();}
 
-let calDrag={active:false,roomId:null,startDate:null,endDate:null,moved:false,hasBooking:false};
+let calDrag={active:false,roomId:null,startDate:null,endDate:null,moved:false,hasBooking:false,bookingId:null};
 function initCalDrag(){
   const table=document.getElementById('calendarTable');
   if(!table)return;
   table.addEventListener('mousedown',function(ev){
     if(ev.button!==0)return;
-    if(ev.target.closest('.booking-block'))return;
+    const bkEl=ev.target.closest('.booking-block');
     const cell=ev.target.closest('.cal-cell');
     if(!cell||!cell.dataset.room)return;
     ev.preventDefault();
@@ -682,6 +682,7 @@ function initCalDrag(){
     calDrag.endDate=cell.dataset.date;
     calDrag.moved=false;
     calDrag.hasBooking=false;
+    calDrag.bookingId=bkEl?bkEl.dataset.bid:null;
     cell.classList.add('cal-drag-origin');
     calHighlight();
   });
@@ -699,7 +700,7 @@ function initCalDrag(){
   });
   document.addEventListener('mouseup',function(ev){
     if(!calDrag.active)return;
-    const dr=calDrag.roomId,ds=calDrag.startDate,de=calDrag.endDate,dm=calDrag.moved,dh=calDrag.hasBooking;
+    const dr=calDrag.roomId,ds=calDrag.startDate,de=calDrag.endDate,dm=calDrag.moved,dh=calDrag.hasBooking,dbid=calDrag.bookingId;
     calDrag.active=false;
     document.querySelectorAll('.cal-drag-origin').forEach(function(c){c.classList.remove('cal-drag-origin');});
     calClearHighlight();
@@ -709,16 +710,29 @@ function initCalDrag(){
       if(co<ci){var t=ci;ci=co;co=t;}
       var nd=new Date(co);nd.setDate(nd.getDate()+1);
       var coStr=localDateStr(nd);
-      if(dh){
-        if(!confirm('\u9009\u4e2d\u7684\u65e5\u671f\u8303\u56f4\u5185\u5df2\u6709\u9884\u8ba2\uff0c\u662f\u5426\u7ee7\u7eed\u521b\u5efa\u65b0\u9884\u8ba2\uff1f'))return;
+      if(dbid){
+        editBooking(parseInt(dbid));
+        setTimeout(function(){
+          document.getElementById('checkIn').value=ci;
+          document.getElementById('checkOut').value=coStr;
+          updateNightsDisplay();
+        },80);
+      }else{
+        if(dh){
+          if(!confirm('\u9009\u4e2d\u7684\u65e5\u671f\u8303\u56f4\u5185\u5df2\u6709\u9884\u8ba2\uff0c\u662f\u5426\u7ee7\u7eed\u521b\u5efa\u65b0\u9884\u8ba2\uff1f'))return;
+        }
+        openBookingModal(null);
+        document.getElementById('roomId').value=dr;
+        document.getElementById('checkIn').value=ci;
+        document.getElementById('checkOut').value=coStr;
+        setTimeout(function(){updateNightsDisplay();document.getElementById('guestName').focus();},80);
       }
-      openBookingModal(null);
-      document.getElementById('roomId').value=dr;
-      document.getElementById('checkIn').value=ci;
-      document.getElementById('checkOut').value=coStr;
-      setTimeout(function(){updateNightsDisplay();document.getElementById('guestName').focus();},80);
     }else{
-      quickBook(parseInt(dr),ds);
+      if(dbid){
+        editBooking(parseInt(dbid));
+      }else{
+        quickBook(parseInt(dr),ds);
+      }
     }
   });
   document.addEventListener('mousemove',function(ev){
@@ -762,7 +776,7 @@ function calHideTip(){
   if(tip)tip.style.display='none';
 }
 
-function renderCalendar(){const y=currentMonth.getFullYear(),m=currentMonth.getMonth();const today=new Date();today.setHours(0,0,0,0);const todayStr=localDateStr(today);const mn=['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];document.getElementById('monthTitle').textContent=y+'年 '+mn[m];const dim=new Date(y,m+1,0).getDate();const dn=['日','一','二','三','四','五','六'];let html='<thead><tr><th class="room-label" style="text-align:left">房间</th>';for(let d=1;d<=dim;d++){const ds=y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');const di=new Date(y,m,d).getDay();const isT=ds===todayStr;const isW=di===0||di===6;html+='<th class="cal-day-header '+(isT?'today':'')+'"><div class="day-num">'+d+'</div><div class="day-name" style="'+(isW?'color:var(--red)':'')+'">'+dn[di]+'</div></th>';}html+='</tr></thead><tbody>';DB.rooms.forEach(room=>{html+='<tr><td class="room-label"><div class="room-icon">🚪</div>'+room.name+'</td>';for(let d=1;d<=dim;d++){const ds=y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');const isT=ds===todayStr;const bks=DB.bookings.filter(b=>b.room_id===room.id&&b.status!=='cancelled'&&ds>=b.check_in&&ds<b.check_out);let cc='';if(bks.length>0){const b=bks[0];const pc='platform-'+(b.platform||'direct')+(b.status==='blocked'?' status-blocked':'')+(b.status!=='cancelled'&&todayStr>=b.check_in&&todayStr<b.check_out?' status-staying':'');const pd=b.parking_spot_id?'<div class="parking-dot"></div>':'';const pl=pMap[b.platform]||b.platform||'';const pL=parkName(b.parking_spot_id)?'🚗'+parkName(b.parking_spot_id):'';const rL=b.remark?'📝 '+b.remark:'';const nN=calcBookingNights(b);const prL=b.price?'💰 £'+b.price+(nN>1?' ('+nN+'晚 £'+(b.price/nN).toFixed(0)+'/晚)':''):'';const tip=[b.guest_name,b.check_in+' → '+b.check_out,roomName(b.room_id)+' · '+pl,pL,prL,b.phone?'📞 '+b.phone:'',rL].filter(Boolean).join('\\n');if(ds===b.check_in){cc='<div class="booking-block '+pc+'" onclick="event.stopPropagation();editBooking('+b.id+')" title="'+tip+'">'+pd+'<div class="guest">'+b.guest_name+'</div><div class="meta">'+b.check_in.slice(5)+' → '+b.check_out.slice(5)+' · '+pl+'</div>'+(prL?'<div class="parking-line">'+prL+'</div>':'')+(pL?'<div class="parking-line">'+pL+'</div>':'')+(rL?'<div class="remark-line">📝 '+b.remark+'</div>':'')+'</div>';}else{cc='<div class="booking-block '+pc+'" onclick="event.stopPropagation();editBooking('+b.id+')" title="'+tip+'">'+pd+'<div class="guest">↳ '+b.guest_name+'</div>'+(prL?'<div class="parking-line">'+prL+'</div>':'')+(rL?'<div class="remark-line">📝 '+b.remark+'</div>':'')+'</div>';}}html+='<td class="cal-cell '+(isT?'today':'')+'" data-room="'+room.id+'" data-date="'+ds+'">'+cc+'</td>';}html+='</tr>';});html+='</tbody>';document.getElementById('calendarTable').innerHTML=html;}
+function renderCalendar(){const y=currentMonth.getFullYear(),m=currentMonth.getMonth();const today=new Date();today.setHours(0,0,0,0);const todayStr=localDateStr(today);const mn=['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];document.getElementById('monthTitle').textContent=y+'年 '+mn[m];const dim=new Date(y,m+1,0).getDate();const dn=['日','一','二','三','四','五','六'];let html='<thead><tr><th class="room-label" style="text-align:left">房间</th>';for(let d=1;d<=dim;d++){const ds=y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');const di=new Date(y,m,d).getDay();const isT=ds===todayStr;const isW=di===0||di===6;html+='<th class="cal-day-header '+(isT?'today':'')+'"><div class="day-num">'+d+'</div><div class="day-name" style="'+(isW?'color:var(--red)':'')+'">'+dn[di]+'</div></th>';}html+='</tr></thead><tbody>';DB.rooms.forEach(room=>{html+='<tr><td class="room-label"><div class="room-icon">🚪</div>'+room.name+'</td>';for(let d=1;d<=dim;d++){const ds=y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');const isT=ds===todayStr;const bks=DB.bookings.filter(b=>b.room_id===room.id&&b.status!=='cancelled'&&ds>=b.check_in&&ds<b.check_out);let cc='';if(bks.length>0){const b=bks[0];const pc='platform-'+(b.platform||'direct')+(b.status==='blocked'?' status-blocked':'')+(b.status!=='cancelled'&&todayStr>=b.check_in&&todayStr<b.check_out?' status-staying':'');const pd=b.parking_spot_id?'<div class="parking-dot"></div>':'';const pl=pMap[b.platform]||b.platform||'';const pL=parkName(b.parking_spot_id)?'🚗'+parkName(b.parking_spot_id):'';const rL=b.remark?'📝 '+b.remark:'';const nN=calcBookingNights(b);const prL=b.price?'💰 £'+b.price+(nN>1?' ('+nN+'晚 £'+(b.price/nN).toFixed(0)+'/晚)':''):'';const tip=[b.guest_name,b.check_in+' → '+b.check_out,roomName(b.room_id)+' · '+pl,pL,prL,b.phone?'📞 '+b.phone:'',rL].filter(Boolean).join('\\n');if(ds===b.check_in){cc='<div class="booking-block '+pc+'" data-bid="'+b.id+'" onclick="event.stopPropagation()" title="'+tip+'">'+pd+'<div class="guest">'+b.guest_name+'</div><div class="meta">'+b.check_in.slice(5)+' → '+b.check_out.slice(5)+' · '+pl+'</div>'+(prL?'<div class="parking-line">'+prL+'</div>':'')+(pL?'<div class="parking-line">'+pL+'</div>':'')+(rL?'<div class="remark-line">📝 '+b.remark+'</div>':'')+'</div>';}else{cc='<div class="booking-block '+pc+'" data-bid="'+b.id+'" onclick="event.stopPropagation()" title="'+tip+'">'+pd+'<div class="guest">↳ '+b.guest_name+'</div>'+(prL?'<div class="parking-line">'+prL+'</div>':'')+(rL?'<div class="remark-line">📝 '+b.remark+'</div>':'')+'</div>';}}html+='<td class="cal-cell '+(isT?'today':'')+'" data-room="'+room.id+'" data-date="'+ds+'">'+cc+'</td>';}html+='</tr>';});html+='</tbody>';document.getElementById('calendarTable').innerHTML=html;}
 function changeMonth(d){currentMonth.setMonth(currentMonth.getMonth()+d);loadCalendar();}
 function goToday(){currentMonth=new Date();loadCalendar();}
 function calcNights(){var ci=document.getElementById('checkIn').value;var co=document.getElementById('checkOut').value;if(!ci||!co)return 0;var d1=new Date(ci);var d2=new Date(co);return Math.round((d2-d1)/86400000);}
