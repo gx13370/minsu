@@ -96,16 +96,7 @@
   .rev-nav select,.rev-nav button{padding:5px 12px;font-size:13px}
   .rev-table th,.rev-table td{padding:6px 8px;font-size:12px}
   .rev-matrix th,.rev-matrix td{padding:5px 6px;font-size:11px}
-  /* iCal */
-  .ical-config{padding:12px}
-  .ical-room-row{flex-direction:column;gap:6px}
-  .ical-room-label{min-width:0;padding-top:0}
-  .ical-input-group{min-width:0}
-  .ical-input-group input{font-size:12px}
-  .ical-help{padding:10px 12px;font-size:12px;line-height:1.5}
-  .ical-paste-area{min-height:80px;font-size:12px}
-  .ical-sync-bar{flex-wrap:wrap}
-  /* Modal */
+    /* Modal */
   .modal-overlay{padding:10px}
   .modal{padding:16px;border-radius:12px;max-width:none;max-height:88vh}
   .modal h2{font-size:16px;margin-bottom:12px}
@@ -137,27 +128,6 @@
   .booking-block .meta{display:none}
   .modal{padding:14px}
 }
-.ical-config{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:16px}
-.ical-room-row{display:flex;gap:12px;align-items:flex-start;margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid var(--border);flex-wrap:wrap}
-.ical-room-row:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
-.ical-room-label{min-width:100px;font-weight:700;font-size:14px;padding-top:8px;display:flex;align-items:center;gap:6px}
-.ical-input-group{flex:1;min-width:200px}
-.ical-input-group label{font-size:12px;color:var(--text2);font-weight:600;display:block;margin-bottom:4px}
-.ical-input-group input{width:100%;padding:8px 12px;border:1px solid var(--border);border-radius:8px;font-size:13px;font-family:inherit}
-.ical-input-group input:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px var(--primary-light)}
-.ical-status{font-size:12px;padding:4px 8px;border-radius:6px;margin-left:8px;white-space:nowrap}
-.ical-status.ok{background:#f0fdf4;color:var(--green)}
-.ical-status.err{background:#fef2f2;color:var(--red)}
-.ical-status.pending{background:#fef3c7;color:var(--orange)}
-.ical-sync-bar{display:flex;gap:12px;align-items:center;margin-bottom:16px;flex-wrap:wrap}
-.ical-sync-result{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;font-size:13px;display:none}
-.ical-sync-result.show{display:block}
-.ical-sync-result .row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border)}
-.ical-sync-result .row:last-child{border-bottom:none}
-.ical-paste-area{width:100%;min-height:120px;padding:12px;border:1px solid var(--border);border-radius:8px;font-size:13px;font-family:monospace;margin-bottom:12px;resize:vertical}
-.ical-help{background:#f0f9ff;border:1px solid #bae6fd;border-radius:10px;padding:14px 16px;margin-bottom:16px;font-size:13px;color:#0c4a6e;line-height:1.6}
-.ical-help b{color:#075985}
-.ical-help code{background:#e0f2fe;padding:2px 6px;border-radius:4px;font-size:12px}
 .sync-badge{display:inline-block;font-size:10px;padding:1px 6px;border-radius:4px;background:var(--primary-light);color:var(--primary);font-weight:600;margin-left:4px}
 .rev-sub-tabs{display:flex;gap:4px;margin-bottom:16px;border-bottom:2px solid var(--border);flex-wrap:wrap}
 .rev-sub-tab{padding:8px 16px;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;font-weight:500;color:var(--text2);transition:all .2s;font-size:14px}
@@ -203,33 +173,12 @@
 <div class="data-bar"><span id="syncStatus">🔄 连接云端...</span><span style="margin-left:auto"></span><button onclick="exportData()">📤 导出</button><button onclick="document.getElementById('importFile').click()">📥 导入</button><button style="border-color:var(--red);color:var(--red)" onclick="clearAllData()">🗑️ 清空</button><input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)"></div>
 <div class="stats-bar" id="statsBar"></div>
 <div class="main">
-<div class="tabs"><div class="tab active" data-tab="calendar" onclick="switchTab('calendar')">📅 日历视图</div><div class="tab" data-tab="list" onclick="switchTab('list')">📋 预订列表</div><div class="tab" data-tab="parking" onclick="switchTab('parking')">🚗 车位管理</div><div class="tab" data-tab="revenue" onclick="switchTab('revenue')">💰 收益统计</div><div class="tab" data-tab="sync" onclick="switchTab('sync')">🔄 iCal同步</div><div class="tab" data-tab="exceptions" onclick="switchTab('exceptions')">⚠️ 异常列表<span id="excBadge" style="display:none;background:var(--red);color:#fff;font-size:10px;padding:1px 6px;border-radius:10px;margin-left:4px"></span></div></div>
+<div class="tabs"><div class="tab active" data-tab="calendar" onclick="switchTab('calendar')">📅 日历视图</div><div class="tab" data-tab="list" onclick="switchTab('list')">📋 预订列表</div><div class="tab" data-tab="parking" onclick="switchTab('parking')">🚗 车位管理</div><div class="tab" data-tab="revenue" onclick="switchTab('revenue')">💰 收益统计</div><div class="tab" data-tab="exceptions" onclick="switchTab('exceptions')">⚠️ 异常列表<span id="excBadge" style="display:none;background:var(--red);color:#fff;font-size:10px;padding:1px 6px;border-radius:10px;margin-left:4px"></span></div></div>
 <div id="tab-calendar"><div class="calendar-header"><div class="month-nav"><button onclick="changeMonth(-1)">◀ 上月</button><span class="month-title" id="monthTitle"></span><button onclick="changeMonth(1)">下月 ▶</button><button class="btn btn-outline btn-sm" onclick="goToday()">今天</button></div><div class="legend"><div class="legend-item"><div class="legend-dot" style="background:var(--booking-color)"></div>Booking</div><div class="legend-item"><div class="legend-dot" style="background:var(--airbnb-color)"></div>Airbnb</div><div class="legend-item"><div class="legend-dot" style="background:var(--direct-color)"></div>直客</div><div class="legend-item"><div class="legend-dot" style="background:#fbbf24;border-radius:50%"></div>有车位</div></div></div><div class="calendar-wrap"><table class="calendar-table" id="calendarTable"></table></div>
 <div id="calDragTip"></div></div>
 <div id="tab-list" style="display:none"><div class="filter-bar"><select id="filterRoom" onchange="loadBookings()"><option value="">全部房间</option></select><select id="filterPlatform" onchange="loadBookings()"><option value="">全部平台</option><option value="booking">Booking.com</option><option value="airbnb">Airbnb</option><option value="direct">直客</option></select><input type="month" id="filterMonth" onchange="loadBookings()"><button class="btn btn-outline btn-sm" onclick="clearFilters()">清除筛选</button></div><div class="booking-list" id="bookingList"></div></div>
 <div id="tab-parking" style="display:none"><div class="parking-date-picker"><label style="font-size:13px;font-weight:600;color:var(--text2);margin-right:8px">选择日期查看车位状态：</label><input type="date" id="parkingDate" onchange="loadParkingStatus()" style="padding:8px 12px;border:1px solid var(--border);border-radius:8px"></div><div class="parking-grid" id="parkingGrid"></div></div>
 <div id="tab-revenue" style="display:none"><div class="rev-sub-tabs" id="revSubTabs"><div class="rev-sub-tab active" data-rev="overview" onclick="switchRevTab('overview')">📊 全部总览</div><div class="rev-sub-tab" data-rev="monthly" onclick="switchRevTab('monthly')">📅 按月度</div><div class="rev-sub-tab" data-rev="quarterly" onclick="switchRevTab('quarterly')">📅 按季度</div><div class="rev-sub-tab" data-rev="yearly" onclick="switchRevTab('yearly')">📅 按年度</div></div><div id="revenueNav"></div><div id="revenueContent"></div></div>
-<div id="tab-sync" style="display:none">
-<div class="ical-help">📌 <b>如何获取 iCal 链接？</b><br>
-<b>Airbnb：</b>登录 Airbnb → 房源 → 日历设置 → 导出日历 → 复制链接（每个房间一个链接）<br>
-<b>Booking.com：</b>登录 Extranet → 日历 → 导出日历 → 复制 iCal URL<br><br>
-💡 iCal 导出的预订只有日期信息，<b>不含客人姓名和价格</b>，同步后可手动补充。已同步的预订再次同步时会自动更新日期，不会重复创建。
-</div>
-<div class="ical-sync-bar">
-<button class="btn btn-primary" onclick="syncAllIcal()">🔄 一键同步全部</button>
-<span style="font-size:13px;color:var(--text2)" id="syncLastTime"></span>
-</div>
-<div class="ical-config" id="icalConfig"></div>
-<div style="margin-top:20px">
-<div style="font-size:16px;font-weight:700;margin-bottom:12px">📋 手动粘贴 iCal（备用）</div>
-<p style="font-size:13px;color:var(--text2);margin-bottom:8px">如果自动同步失败（网络限制），可以手动复制 iCal 内容粘贴到这里：</p>
-<select id="pasteRoom" class="form-control" style="margin-bottom:8px;max-width:200px"></select>
-<select id="pastePlatform" class="form-control" style="margin-bottom:8px;max-width:200px"><option value="airbnb">Airbnb</option><option value="booking">Booking.com</option></select>
-<textarea class="ical-paste-area" id="pasteIcal" placeholder="粘贴 iCal 内容（以 BEGIN:VCALENDAR 开头）..."></textarea>
-<button class="btn btn-primary" onclick="parsePastedIcal()">解析并导入</button>
-</div>
-<div class="ical-sync-result" id="syncResult"></div>
-</div>
 <div id="tab-exceptions" style="display:none"><div id="exceptionsContent"></div></div>
 </div>
 <div class="modal-overlay" id="bookingModal"><div class="modal"><h2 id="modalTitle">新增预订</h2><input type="hidden" id="bookingId"><div class="form-group"><label>客人姓名 <span class="req">*</span></label><input type="text" class="form-control" id="guestName" placeholder="如：张三"></div><div class="form-row"><div class="form-group"><label>房间 <span class="req">*</span></label><select class="form-control" id="roomId"></select></div><div class="form-group"><label>平台来源</label><select class="form-control" id="platform"><option value="direct">直客</option><option value="booking">Booking.com</option><option value="airbnb">Airbnb</option></select></div></div><div class="form-row"><div class="form-group"><label>入住日期 <span class="req">*</span></label><input type="date" class="form-control" id="checkIn" onchange="updateNightsDisplay()"></div><div class="form-group"><label>退房日期 <span class="req">*</span></label><input type="date" class="form-control" id="checkOut" onchange="updateNightsDisplay()"></div></div><div class="form-row"><div class="form-group"><label>车位分配</label><select class="form-control" id="parkingSpot"><option value="">不需要车位</option></select></div><div class="form-group"><label>联系电话</label><input type="text" class="form-control" id="phone" placeholder="可选"></div></div><div class="form-row"><div class="form-group"><label>每晚单价 (£)</label><input type="number" class="form-control" id="nightlyRate" placeholder="如：100/晚" min="0" step="0.01" oninput="onNightlyRateInput()"></div><div class="form-group"><label>入住晚数</label><div id="nightsDisplay" style="padding:10px 12px;background:var(--bg);border:1px solid var(--border);border-radius:8px;font-size:14px;color:var(--text2)">请先选择日期</div></div></div><div class="form-row"><div class="form-group"><label>订单总价 (£) <span id="discountHint" style="font-size:12px;font-weight:400"></span></label><input type="number" class="form-control" id="price" placeholder="如：800" min="0" step="0.01" oninput="onTotalPriceInput()"></div><div class="form-group"><label>状态</label><select class="form-control" id="status"><option value="confirmed">已确认</option><option value="pending">待确认</option><option value="cancelled">已取消</option><option value="blocked">已封锁</option></select></div></div><div class="form-group"><label>备注</label><textarea class="form-control" id="remark" placeholder="入住时间、特殊需求、钥匙放置位置等..."></textarea></div><div class="modal-actions"><button class="btn btn-danger" id="deleteBtn" style="display:none;margin-right:auto" onclick="deleteBooking()">删除</button><button class="btn btn-outline" onclick="closeBookingModal()">取消</button><button class="btn btn-primary" onclick="saveBooking()">保存</button></div></div></div>
@@ -258,362 +207,6 @@ async function syncToCloud(){if(isSyncing)return;isSyncing=true;updateSyncStatus
 async function syncFromCloud(){try{const r=await fetch('https://api.github.com/repos/'+CLOUD.owner+'/'+CLOUD.repo+'/contents/'+CLOUD.path+'?ref='+CLOUD.branch+'&t='+Date.now(),{headers:{Authorization:'token '+CLOUD.token,Accept:'application/vnd.github+json'}});if(!r.ok)return false;const d=await r.json();const content=decodeURIComponent(escape(atob(d.content)));const cloudDB=JSON.parse(content);const ct=cloudDB.lastSync?new Date(cloudDB.lastSync).getTime():0;const lt=DB.lastSync?new Date(DB.lastSync).getTime():0;if(ct>lt){DB=cloudDB;DB.lastSync=cloudDB.lastSync;localStorage.setItem('minsu_db',JSON.stringify(DB));return true;}return false;}catch(e){return false;}}
 function debouncedSync(){if(syncTimer)clearTimeout(syncTimer);syncTimer=setTimeout(()=>{DB.lastSync=new Date().toISOString();localStorage.setItem('minsu_db',JSON.stringify(DB));syncToCloud();},2000);}
 async function cloudSyncInit(){updateSyncStatus('connecting');try{const r=await fetch('https://api.github.com/repos/'+CLOUD.owner+'/'+CLOUD.repo+'/contents/'+CLOUD.path+'?ref='+CLOUD.branch+'&t='+Date.now(),{headers:{Authorization:'token '+CLOUD.token,Accept:'application/vnd.github+json'}});if(r.status===404){updateSyncStatus('synced','首次同步');DB.lastSync=new Date().toISOString();localStorage.setItem('minsu_db',JSON.stringify(DB));syncToCloud();return;}if(!r.ok){updateSyncStatus('error');return;}const d=await r.json();const content=decodeURIComponent(escape(atob(d.content)));const cloudDB=JSON.parse(content);const ct=cloudDB.lastSync?new Date(cloudDB.lastSync).getTime():0;const lt=DB.lastSync?new Date(DB.lastSync).getTime():0;if(ct>lt){DB=cloudDB;DB.lastSync=cloudDB.lastSync;localStorage.setItem('minsu_db',JSON.stringify(DB));toast('已从云端同步最新数据','success');refreshAll();updateSyncStatus('synced',new Date().toLocaleTimeString('zh-CN'));}else{updateSyncStatus('synced',new Date().toLocaleTimeString('zh-CN'));}}catch(e){updateSyncStatus('error');}}
-// ====== iCal 同步 ======
-const ICAL_PROXIES = [
-  url => url,
-  url => 'https://proxy.cors.sh/' + url,
-  url => 'https://api.allorigins.win/raw?url=' + encodeURIComponent(url),
-  url => 'https://corsproxy.io/?url=' + encodeURIComponent(url),
-  url => 'https://cors.eu.org/' + url
-];
-
-function getIcalConfig() {
-  try { return JSON.parse(localStorage.getItem('minsu_ical') || '[]'); }
-  catch(e) { return []; }
-}
-
-function saveIcalConfig(config) {
-  localStorage.setItem('minsu_ical', JSON.stringify(config));
-}
-
-function renderIcalConfig() {
-  const config = getIcalConfig();
-  const container = document.getElementById('icalConfig');
-  let html = '<div style="font-size:16px;font-weight:700;margin-bottom:16px">🔗 iCal 链接配置</div>';
-  
-  DB.rooms.forEach(room => {
-    const airbnbCfg = config.find(c => c.room_id === room.id && c.platform === 'airbnb');
-    const bookingCfg = config.find(c => c.room_id === room.id && c.platform === 'booking');
-    
-    html += '<div class="ical-room-row">';
-    html += '<div class="ical-room-label">🚪 ' + room.name + '</div>';
-    html += '<div class="ical-input-group">';
-    html += '<label>Airbnb iCal 链接</label>';
-    html += '<input type="text" id="ical_airbnb_' + room.id + '" value="' + (airbnbCfg ? airbnbCfg.url : '') + '" placeholder="https://www.airbnb.com/calendar/ical/..." onchange="saveIcalUrl(' + room.id + ',\'airbnb\',this.value)">';
-    html += '</div>';
-    html += '<div class="ical-input-group">';
-    html += '<label>Booking.com iCal 链接</label>';
-    html += '<input type="text" id="ical_booking_' + room.id + '" value="' + (bookingCfg ? bookingCfg.url : '') + '" placeholder="https://admin.booking.com/..." onchange="saveIcalUrl(' + room.id + ',\'booking\',this.value)">';
-    html += '</div>';
-    html += '</div>';
-  });
-  
-  html += '</div>';
-  container.innerHTML = html;
-  
-  // Populate paste room select
-  const pasteRoom = document.getElementById('pasteRoom');
-  if (pasteRoom) {
-    pasteRoom.innerHTML = DB.rooms.map(r => '<option value="' + r.id + '">' + r.name + '</option>').join('');
-  }
-  
-  // Show last sync time
-  const lastSync = localStorage.getItem('minsu_ical_last');
-  const lastEl = document.getElementById('syncLastTime');
-  if (lastEl) lastEl.textContent = lastSync ? '上次同步：' + lastSync : '尚未同步';
-}
-
-function saveIcalUrl(roomId, platform, url) {
-  let config = getIcalConfig();
-  const idx = config.findIndex(c => c.room_id === roomId && c.platform === platform);
-  const trimmed = url.trim();
-  if (trimmed) {
-    if (idx >= 0) config[idx].url = trimmed;
-    else config.push({ room_id: roomId, platform, url: trimmed });
-  } else {
-    if (idx >= 0) config.splice(idx, 1);
-  }
-  saveIcalConfig(config);
-  toast('iCal 链接已保存', 'success');
-}
-
-// Parse iCal text, return array of events
-function parseICal(icalText) {
-  const events = [];
-  // Normalize line folding (lines starting with space/tab are continuations)
-  icalText = icalText.replace(/\r\n /g, '').replace(/\r\n\t/g, '').replace(/\n /g, '').replace(/\n\t/g, '');
-  const lines = icalText.split(/\r?\n/);
-  
-  let inEvent = false;
-  let event = {};
-  
-  for (let line of lines) {
-    if (line.startsWith('BEGIN:VEVENT')) {
-      inEvent = true;
-      event = {};
-    } else if (line.startsWith('END:VEVENT')) {
-      if (event.dtstart && event.dtend) {
-        events.push(event);
-      }
-      inEvent = false;
-    } else if (inEvent) {
-      const colonIdx = line.indexOf(':');
-      if (colonIdx < 0) continue;
-      const propPart = line.substring(0, colonIdx);
-      const value = line.substring(colonIdx + 1);
-      const propName = propPart.split(';')[0].toUpperCase();
-      
-      if (propName === 'DTSTART') {
-        event.dtstart = parseICalDate(value);
-      } else if (propName === 'DTEND') {
-        event.dtend = parseICalDate(value);
-      } else if (propName === 'SUMMARY') {
-        event.summary = value;
-      } else if (propName === 'DESCRIPTION') {
-        event.description = value;
-      } else if (propName === 'UID') {
-        event.uid = value;
-      } else if (propName === 'STATUS') {
-        event.status = value;
-      }
-    }
-  }
-  
-  return events;
-}
-
-function localDateStr(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
-function parseICalDate(str) {
-  // Format: 20260805T120000Z or 20260805
-  str = str.trim();
-  if (str.length === 8) {
-    // Date only: YYYYMMDD
-    return str.substring(0, 4) + '-' + str.substring(4, 6) + '-' + str.substring(6, 8);
-  }
-  if (str.length >= 15) {
-    // DateTime: YYYYMMDDTHHMMSSZ or YYYYMMDDTHHMMSS
-    if (str.endsWith('Z')) {
-      // UTC datetime - must convert to local date to avoid off-by-one
-      var isoStr = str.replace(/(\d{4})(\d{2})(\d{2})T(\d{2})(\d{2})(\d{2})Z/, '$1-$2-$3T$4:$5:$6Z');
-      var d = new Date(isoStr);
-      return localDateStr(d);
-    }
-    // Local datetime (TZID) - date part is already correct
-    return str.substring(0, 4) + '-' + str.substring(4, 6) + '-' + str.substring(6, 8);
-  }
-  return str;
-}
-
-// Extract guest name from iCal event
-function extractGuestName(event) {
-  // Airbnb sometimes puts guest name in SUMMARY or DESCRIPTION
-  if (event.summary && event.summary !== 'Reserved' && event.summary !== 'Not available' && event.summary !== 'Blocked' && !event.summary.startsWith('Airbnb')) {
-    return event.summary;
-  }
-  if (event.description) {
-    // Try to find guest name in description
-    const nameMatch = event.description.match(/(?:Guest|客人|姓名)[:\s]*([^\n,]+)/i);
-    if (nameMatch) return nameMatch[1].trim();
-  }
-  return '平台预订';
-}
-
-// Sync bookings from parsed events
-function syncEventsToBookings(events, roomId, platform) {
-  let added = 0, updated = 0, skipped = 0;
-  const results = [];
-  
-  events.forEach(event => {
-    const checkIn = event.dtstart;
-    const checkOut = event.dtend;
-    if (!checkIn || !checkOut || checkOut <= checkIn) {
-      skipped++;
-      return;
-    }
-    
-    // Detect blocked/unavailable entries from Booking.com
-    const summary = (event.summary || '').toLowerCase();
-    const isBlocked = summary.includes('blocked') || summary.includes('not available') || summary.includes('unavailable') || summary.includes('closed');
-    
-    const syncUid = (event.uid || platform + '_' + roomId + '_' + checkIn + '_' + checkOut).trim();
-    const guestName = isBlocked ? '已预订' : extractGuestName(event);
-    const bookingStatus = 'confirmed';
-    
-    // Check if this synced booking already exists
-    const existing = DB.bookings.find(b => b.sync_uid === syncUid);
-    
-    if (existing) {
-      // Update dates if changed
-      if (existing.check_in !== checkIn || existing.check_out !== checkOut) {
-        existing.check_in = checkIn;
-        existing.check_out = checkOut;
-        existing.status = bookingStatus;
-        existing.guest_name = guestName;
-        updated++;
-      } else {
-        skipped++; // No change
-      }
-    } else {
-      // Check for room conflict with manually created bookings (only for confirmed, not blocked)
-      if (!isBlocked) {
-        const conflict = DB.bookings.find(b =>
-          b.room_id === roomId &&
-          b.status !== 'cancelled' &&
-          !b.sync_uid &&
-          b.check_in < checkOut && b.check_out > checkIn
-        );
-        
-        if (conflict) {
-          DB.conflicts.push({id:DB.nextConflictId++,type:'room',sync_uid:syncUid,new_data:{room_id:roomId,guest_name:guestName,check_in:checkIn,check_out:checkOut,platform:platform,price:0},existing_id:conflict.id,existing_guest:conflict.guest_name,existing_checkin:conflict.check_in,existing_checkout:conflict.check_out,existing_room:roomName(conflict.room_id),existing_platform:conflict.platform||'direct',source:'iCal同步('+platform+')',created_at:new Date().toISOString(),status:'pending'});
-          results.push({ guest: conflict.guest_name, dates: conflict.check_in + '~' + conflict.check_out, action: '冲突已记录到异常' });
-          skipped++;
-          return;
-        }
-      }
-      
-      // Create new booking (including blocked dates)
-      DB.bookings.push({
-        id: DB.nextId++,
-        room_id: roomId,
-        guest_name: guestName,
-        check_in: checkIn,
-        check_out: checkOut,
-        platform: platform,
-        parking_spot_id: null,
-        phone: '',
-        price: 0,
-        remark: '┄ iCal同步',
-        status: bookingStatus,
-        sync_uid: syncUid,
-        sync_platform: platform
-      });
-      added++;
-    }
-  });
-  
-  return { added, updated, skipped, results };
-}
-
-async function fetchICal(url) {
-  const errors = [];
-  for (let i = 0; i < ICAL_PROXIES.length; i++) {
-    try {
-      const proxyUrl = ICAL_PROXIES[i](url);
-      const proxyName = i === 0 ? '直连' : i === 1 ? 'proxy.cors.sh' : i === 2 ? 'allorigins' : i === 3 ? 'corsproxy.io' : 'cors.eu.org';
-      const response = await fetch(proxyUrl, { 
-        signal: AbortSignal.timeout(20000),
-        headers: i === 1 ? { 'x-cors-api-key': 'temp_demo_key' } : {}
-      });
-      if (response.ok) {
-        const text = await response.text();
-        if (text && text.includes('BEGIN:VCALENDAR')) {
-          return text;
-        }
-        errors.push(proxyName + ': 返回内容非iCal格式');
-      } else {
-        errors.push(proxyName + ': HTTP ' + response.status);
-      }
-    } catch(e) {
-      const proxyName = i === 0 ? '直连' : i === 1 ? 'proxy.cors.sh' : i === 2 ? 'allorigins' : i === 3 ? 'corsproxy.io' : 'cors.eu.org';
-      errors.push(proxyName + ': ' + e.message);
-    }
-  }
-  throw new Error('所有代理均失败: ' + errors.join('; '));
-}
-
-async function syncAllIcal(silent) {
-  const config = getIcalConfig();
-  if (config.length === 0) {
-    toast('请先配置 iCal 链接', 'error');
-    return;
-  }
-  
-  const btn = (typeof event!=='undefined' && event && event.target) ? event.target : null;
-  if(btn&&!silent){btn.disabled=true;btn.textContent='⏳ 同步中...';}
-  
-  const resultEl = document.getElementById('syncResult');
-  if(!silent){resultEl.classList.add('show');resultEl.innerHTML='<div style="text-align:center;padding:20px;color:var(--text2)">⏳ 正在从平台拉取日历数据...</div>';}
-  
-  let allResults = [];
-  let totalAdded = 0, totalUpdated = 0, totalSkipped = 0;
-  
-  for (const cfg of config) {
-    if (!cfg.url) continue;
-    try {
-      const icalText = await fetchICal(cfg.url);
-      const events = parseICal(icalText);
-      const { added, updated, skipped, results } = syncEventsToBookings(events, cfg.room_id, cfg.platform);
-      
-      totalAdded += added;
-      totalUpdated += updated;
-      totalSkipped += skipped;
-      
-      const roomName = roomName(cfg.room_id) || ('房间' + cfg.room_id);
-      allResults.push({
-        room: roomName,
-        platform: cfg.platform,
-        total: events.length,
-        added, updated, skipped,
-        success: true
-      });
-    } catch(e) {
-      allResults.push({
-        room: roomName(cfg.room_id) || ('房间' + cfg.room_id),
-        platform: cfg.platform,
-        success: false,
-        error: e.message
-      });
-    }
-  }
-  
-  saveDB();
-  const now = new Date();
-  const timeStr = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0') + '-' + String(now.getDate()).padStart(2,'0') + ' ' + String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0');
-  localStorage.setItem('minsu_ical_last', timeStr);
-  
-  // Render results
-  let html = '<div style="font-size:16px;font-weight:700;margin-bottom:12px">📊 同步结果</div>';
-  html += '<div class="row"><span>新增预订</span><span style="color:var(--green);font-weight:700">' + totalAdded + ' 条</span></div>';
-  html += '<div class="row"><span>更新预订</span><span style="color:var(--primary);font-weight:700">' + totalUpdated + ' 条</span></div>';
-  html += '<div class="row"><span>跳过（无变化）</span><span style="color:var(--text2)">' + totalSkipped + ' 条</span></div>';
-  html += '<div style="margin-top:12px;font-size:13px;color:var(--text2)">详细：</div>';
-  
-  allResults.forEach(r => {
-    const platformLabel = r.platform === 'airbnb' ? 'Airbnb' : 'Booking.com';
-    if (r.success) {
-      html += '<div class="row"><span>🚪 ' + r.room + ' · ' + platformLabel + '</span><span style="color:var(--green)">✅ 拉取' + r.total + '条，新增' + r.added + ' 更新' + r.updated + ' 跳过' + r.skipped + '</span></div>';
-    } else {
-      html += '<div class="row"><span>🚪 ' + r.room + ' · ' + platformLabel + '</span><span style="color:var(--red)">❌ ' + r.error + '</span></div>';
-    }
-  });
-  
-  html += '<div style="margin-top:12px;font-size:12px;color:var(--text2)">💡 平台预订显示为绿色，代表已预订/不可再订。可点击编辑补充价格和备注。</div>';
-  resultEl.innerHTML = html;
-  
-  const lastEl = document.getElementById('syncLastTime');
-  if (lastEl) lastEl.textContent = '上次同步：' + timeStr;
-  
-  if(btn&&!silent){btn.disabled=false;btn.textContent='🔄 一键同步全部';}
-  if(!silent) toast('同步完成：新增' + totalAdded + ' 更新' + totalUpdated + ' 跳过' + totalSkipped, 'success');
-
-  loadCalendar();
-  loadStats();
-  loadBookings();
-  updateExcBadge();
-}
-
-function parsePastedIcal() {
-  const text = document.getElementById('pasteIcal').value.trim();
-  if (!text) { toast('请粘贴 iCal 内容', 'error'); return; }
-  if (!text.includes('BEGIN:VCALENDAR')) { toast('内容格式不正确，需以 BEGIN:VCALENDAR 开头', 'error'); return; }
-  
-  const roomId = parseInt(document.getElementById('pasteRoom').value);
-  const platform = document.getElementById('pastePlatform').value;
-  
-  const events = parseICal(text);
-  const { added, updated, skipped } = syncEventsToBookings(events, roomId, platform);
-  
-  saveDB();
-  loadCalendar();
-  loadStats();
-  loadBookings();
-  updateExcBadge();
-
-  document.getElementById('pasteIcal').value = '';
-  toast('导入完成：新增' + added + ' 更新' + updated + ' 跳过' + skipped, 'success');
-}
-
-
 // ====== 异常列表 ======
 function updateExcBadge(){const pending=DB.conflicts.filter(c=>c.status==='pending').length;const badge=document.getElementById('excBadge');if(badge){badge.textContent=pending;badge.style.display=pending>0?'inline-flex':'none';}}
 function loadConflicts(){
@@ -662,7 +255,7 @@ function resolveConflict(id,action){
 function renderRoomSelect(){document.getElementById('roomId').innerHTML=DB.rooms.map(r=>'<option value="'+r.id+'">'+r.name+'</option>').join('');}
 function renderParkingSelect(){document.getElementById('parkingSpot').innerHTML='<option value="">不需要车位</option>'+DB.parkingSpots.map(p=>'<option value="'+p.id+'">'+p.name+'</option>').join('');}
 function renderFilterRooms(){document.getElementById('filterRoom').innerHTML='<option value="">全部房间</option>'+DB.rooms.map(r=>'<option value="'+r.id+'">'+r.name+'</option>').join('');}
-function switchTab(t){document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));document.querySelector('.tab[data-tab="'+t+'"]').classList.add('active');document.querySelectorAll('[id^="tab-"]').forEach(el=>el.style.display='none');document.getElementById('tab-'+t).style.display='block';if(t==='revenue')loadRevenue();if(t==='sync')renderIcalConfig();if(t==='exceptions')loadConflicts();}
+function switchTab(t){document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));document.querySelector('.tab[data-tab="'+t+'"]').classList.add('active');document.querySelectorAll('[id^="tab-"]').forEach(el=>el.style.display='none');document.getElementById('tab-'+t).style.display='block';if(t==='revenue')loadRevenue();if(t==='exceptions')loadConflicts();}
 function loadStats(){const today=localDateStr(new Date());const ms=new Date();ms.setDate(1);const msStr=localDateStr(ms);const nm=new Date(ms);nm.setMonth(nm.getMonth()+1);const nmStr=localDateStr(nm);const mb=DB.bookings.filter(b=>b.check_in<nmStr&&b.check_out>msStr);const ti=DB.bookings.filter(b=>b.check_in<=today&&b.check_out>today&&b.status==='confirmed').length;const ps={};mb.forEach(b=>{const p=b.platform||'direct';ps[p]=(ps[p]||0)+1;});const pa=Object.entries(ps).map(([platform,c])=>({platform,c}));const we=new Date();we.setDate(we.getDate()+7);const weStr=localDateStr(we);const up=DB.bookings.filter(b=>b.check_in>=today&&b.check_in<=weStr&&b.status==='confirmed').sort((a,b)=>a.check_in.localeCompare(b.check_in));let ph=pa.length?pa.map(p=>'<span class="platform-badge '+p.platform+'">'+(pMap[p.platform]||p.platform)+' '+p.c+'</span>').join(' '):'<span style="color:var(--text2);font-size:13px">本月暂无预订</span>';const totRooms=DB.rooms.length;const occToday=DB.bookings.filter(b=>b.check_in<=today&&b.check_out>today&&b.status==='confirmed').length;const vacToday=totRooms-occToday;const occTodayPct=totRooms>0?Math.round(occToday/totRooms*100):0;const dim=new Date(ms.getFullYear(),ms.getMonth()+1,0).getDate();const totNights=totRooms*dim;let bookedNights=0;mb.forEach(b=>{const os=b.check_in>msStr?b.check_in:msStr;const oe=b.check_out<nmStr?b.check_out:nmStr;const dn=Math.round((new Date(oe)-new Date(os))/86400000);if(dn>0)bookedNights+=dn;});const vacMonthNights=totNights-bookedNights;const occMonthPct=totNights>0?Math.round(bookedNights/totNights*100):0;document.getElementById('statsBar').innerHTML='<div class="stat-card"><div class="stat-icon" style="background:var(--primary-light);color:var(--primary)">📅</div><div><div class="stat-val">'+mb.length+'</div><div class="stat-label">本月预订</div></div></div><div class="stat-card"><div class="stat-icon" style="background:#fef3c7;color:var(--orange)">🔑</div><div><div class="stat-val">'+ti+'</div><div class="stat-label">今日在住</div></div></div><div class="stat-card" style="min-width:280px"><div class="stat-icon" style="background:#f0fdf4;color:var(--green)">📊</div><div><div class="stat-label" style="margin-bottom:4px">平台分布</div><div>'+ph+'</div></div></div><div class="stat-card" style="min-width:200px"><div class="stat-icon" style="background:#fef2f2;color:var(--red)">⏰</div><div><div class="stat-val">'+up.length+'</div><div class="stat-label">7天内将入住</div></div></div><div class="stat-card"><div class="stat-icon" style="background:#eff6ff;color:#3b82f6">🏠</div><div><div class="stat-val">'+occTodayPct+'%</div><div class="stat-label">今日入住率 (空'+vacToday+'间)</div></div></div><div class="stat-card"><div class="stat-icon" style="background:#f0fdf4;color:var(--green)">📈</div><div><div class="stat-val">'+occMonthPct+'%</div><div class="stat-label">本月入住率 (空'+vacMonthNights+'晚)</div></div></div>';}
 function loadCalendar(){renderCalendar();}
 
@@ -994,11 +587,9 @@ function saveRoomSettings(){let changed=false;DB.rooms.forEach(r=>{const nn=docu
 document.getElementById('bookingModal').addEventListener('click',function(e){if(e.target===this)closeBookingModal();});
 document.getElementById('roomModal').addEventListener('click',function(e){if(e.target===this)closeRoomModal();});
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeBookingModal();});
-function init(){loadDB();refreshAll();cloudSyncInit();initCalDrag();setTimeout(autoIcalSync,8000);}
-function autoIcalSync(){if(!isSyncing&&document.visibilityState==='visible'){const cfg=getIcalConfig();if(cfg&&cfg.length){try{syncAllIcal(true);}catch(e){}}}}
+function init(){loadDB();refreshAll();cloudSyncInit();initCalDrag();}
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&!isSyncing){syncFromCloud().then(u=>{if(u){refreshAll();toast('已从云端同步','success');updateSyncStatus('synced',new Date().toLocaleTimeString('zh-CN'));}});}});
 setInterval(()=>{if(!isSyncing&&document.visibilityState==='visible'){syncFromCloud().then(u=>{if(u){refreshAll();updateSyncStatus('synced',new Date().toLocaleTimeString('zh-CN'));}});}},30000);
-setInterval(()=>{autoIcalSync();},5*60*1000);
 init();
 </script>
 </body>
