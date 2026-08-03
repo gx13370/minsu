@@ -193,6 +193,13 @@ function saveDB(){localStorage.setItem('minsu_db',JSON.stringify(DB));debouncedS
 function roomName(id){return DB.rooms.find(r=>r.id===id)?.name||'';}
 function parkName(id){return id?(DB.parkingSpots.find(p=>p.id===id)?.name||''):'';}
 function calcBookingNights(b){if(!b||!b.check_in||!b.check_out)return 0;var d1=new Date(b.check_in);var d2=new Date(b.check_out);return Math.round((d2-d1)/86400000);}
+function nightsInMonth(b,monthStr){if(!b||!b.check_in||!b.check_out)return 0;var[y,m]=monthStr.split('-').map(Number);var ms=monthStr+'-01';var nm=(m===12?(y+1)+'-01':y+'-'+String(m+1).padStart(2,'0'))+'-01';var os=b.check_in>ms?b.check_in:ms;var oe=b.check_out<nm?b.check_out:nm;var dn=Math.round((new Date(oe)-new Date(os))/86400000);return Math.max(0,dn);}
+function priceInMonth(b,monthStr){if(!b||!b.price||b.price<=0)return 0;var n=calcBookingNights(b);if(n<=0)return 0;var dn=nightsInMonth(b,monthStr);if(dn<=0)return 0;return Math.round((b.price/n*dn)*100)/100;}
+function commInMonth(b,monthStr){if(!b||!b.price||b.price<=0)return 0;var pm=priceInMonth(b,monthStr);var p=b.platform||'direct';var rate=(p==='airbnb')?0.186:(p==='booking')?0.166:0;return Math.round(pm*rate*100)/100;}
+function netInMonth(b,monthStr){return priceInMonth(b,monthStr)-commInMonth(b,monthStr);}
+function bookingsOverlapMonth(b,monthStr){return nightsInMonth(b,monthStr)>0;}
+function priceInYear(b,yearStr){var t=0;var n=calcBookingNights(b);if(n<=0||!b.price)return 0;var ci=new Date(b.check_in);var co=new Date(b.check_out);var ys=parseInt(yearStr);for(var mo=1;mo<=12;mo++){var ms=yearStr+'-'+String(mo).padStart(2,'0');var dn=nightsInMonth(b,ms);if(dn>0)t+=b.price/n*dn;}return Math.round(t*100)/100;}
+function commInYear(b,yearStr){var pm=priceInYear(b,yearStr);var p=b.platform||'direct';var rate=(p==='airbnb')?0.186:(p==='booking')?0.166:0;return Math.round(pm*rate*100)/100;}
 function checkConflict(rid,ci,co,psid,exId){const rc=DB.bookings.find(b=>b.id!==exId&&b.room_id===rid&&b.status!=='cancelled'&&b.check_in<co&&b.check_out>ci);if(rc)return{type:'room',b:rc};if(psid){const pc=DB.bookings.find(b=>b.id!==exId&&b.parking_spot_id===psid&&b.status!=='cancelled'&&b.check_in<co&&b.check_out>ci);if(pc)return{type:'parking',b:pc};}return null;}
 function exportData(){const d=JSON.stringify(DB,null,2);const b=new Blob([d],{type:'application/json'});const u=URL.createObjectURL(b);const a=document.createElement('a');a.href=u;a.download='民宿数据备份_'+localDateStr(new Date())+'.json';a.click();URL.revokeObjectURL(u);toast('数据已导出','success');}
 function importData(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=function(ev){try{const d=JSON.parse(ev.target.result);if(d.rooms&&d.bookings!==undefined){DB.rooms=d.rooms;DB.parkingSpots=d.parkingSpots||DB.parkingSpots;DB.bookings=d.bookings||[];DB.nextId=d.nextId||(DB.bookings.length?Math.max(...DB.bookings.map(b=>b.id))+1:1);saveDB();toast('数据导入成功','success');location.reload();}else toast('文件格式不正确','error');}catch(err){toast('导入失败','error');}};r.readAsText(f);}
@@ -376,7 +383,7 @@ function calcNights(){var ci=document.getElementById('checkIn').value;var co=doc
 function updateNightsDisplay(){var n=calcNights();var el=document.getElementById('nightsDisplay');if(el){if(n>0){el.innerHTML='共 <b>'+n+'</b> 晚';el.style.color='var(--primary)';}else{el.innerHTML='请先选择日期';el.style.color='var(--text2)';}}onNightlyRateInput();}
 function onNightlyRateInput(){var nr=parseFloat(document.getElementById('nightlyRate').value)||0;var n=calcNights();if(nr>0&&n>0){document.getElementById('price').value=(nr*n).toFixed(2);}updateDiscountHint();}
 function onTotalPriceInput(){updateDiscountHint();}
-function updateDiscountHint(){var nr=parseFloat(document.getElementById('nightlyRate').value)||0;var n=calcNights();var total=parseFloat(document.getElementById('price').value)||0;var el=document.getElementById('discountHint');if(!el)return;if(nr>0&&n>0&&total>0){var expected=nr*n;var diff=expected-total;if(diff>0.01){el.textContent='（优惠 £'+diff.toFixed(2)+'，实付 £'+(total/n).toFixed(2)+'/晚）';el.style.color='var(--green)';}else if(diff<-0.01){el.textContent='（加价 £'+(-diff).toFixed(2)+'，实付 £'+(total/n).toFixed(2)+'/晚）';el.style.color='var(--orange)';}else{el.textContent='（£'+(total/n).toFixed(2)+'/晚）';el.style.color='var(--text2)';}}else{el.textContent='';}}
+function updateDiscountHint(){var nr=parseFloat(document.getElementById('nightlyRate').value)||0;var n=calcNights();var total=parseFloat(document.getElementById('price').value)||0;var el=document.getElementById('discountHint');if(!el)return;if(n>0&&total>0){var perNight=total/n;if(nr>0){var expected=nr*n;var diff=expected-total;if(diff>0.01){el.innerHTML='（优惠 £'+diff.toFixed(2)+'，<b>£'+perNight.toFixed(2)+'/晚 × '+n+'晚</b>）';el.style.color='var(--green)';}else if(diff<-0.01){el.innerHTML='（加价 £'+(-diff).toFixed(2)+'，<b>£'+perNight.toFixed(2)+'/晚 × '+n+'晚</b>）';el.style.color='var(--orange)';}else{el.innerHTML='（<b>£'+perNight.toFixed(2)+'/晚 × '+n+'晚 = £'+total.toFixed(2)+'</b>）';el.style.color='var(--text2)';}}else{el.innerHTML='（<b>£'+perNight.toFixed(2)+'/晚 × '+n+'晚 = £'+total.toFixed(2)+'</b>）';el.style.color='var(--text2)';}}else{el.textContent='';}}
 function openBookingModal(b){document.getElementById('modalTitle').textContent=b?'编辑预订':'新增预订';document.getElementById('bookingId').value=b?b.id:'';document.getElementById('guestName').value=b?b.guest_name:'';document.getElementById('roomId').value=b?b.room_id:(DB.rooms[0]?.id||'');document.getElementById('platform').value=b?(b.platform||'direct'):'direct';document.getElementById('checkIn').value=b?b.check_in:'';document.getElementById('checkOut').value=b?b.check_out:'';document.getElementById('parkingSpot').value=b?(b.parking_spot_id||''):'';document.getElementById('phone').value=b?(b.phone||''):'';document.getElementById('price').value=b?(b.price||''):'';document.getElementById('nightlyRate').value=b?(b.nightly_rate||''):'';document.getElementById('remark').value=b?(b.remark||''):'';document.getElementById('status').value=b?(b.status||'confirmed'):'confirmed';document.getElementById('deleteBtn').style.display=b?'inline-flex':'none';document.getElementById('bookingModal').classList.add('show');setTimeout(updateNightsDisplay,50);}
 function closeBookingModal(){document.getElementById('bookingModal').classList.remove('show');}
 function quickBook(rid,ds){const nd=new Date(ds);nd.setDate(nd.getDate()+1);openBookingModal(null);document.getElementById('roomId').value=rid;document.getElementById('checkIn').value=ds;document.getElementById('checkOut').value=localDateStr(nd);setTimeout(updateNightsDisplay,50);}
@@ -395,8 +402,12 @@ const MNAMES=['1月','2月','3月','4月','5月','6月','7月','8月','9月','10
 function switchRevTab(t){revTab=t;document.querySelectorAll('.rev-sub-tab').forEach(x=>x.classList.toggle('active',x.dataset.rev===t));loadRevenue();}
 
 function calcRev(bks){let c=0,g=0,cm=0,n=0;bks.forEach(b=>{c++;g+=b.price||0;const p=b.platform||'direct';const comm=(p==='airbnb')?(b.price||0)*0.186:(p==='booking')?(b.price||0)*0.166:0;cm+=comm;n+=(b.price||0)-comm;});return{count:c,gross:g,commission:cm,net:n};}
+function calcRevMonth(bks,ms){let c=0,g=0,cm=0,n=0;bks.forEach(b=>{if(!bookingsOverlapMonth(b,ms))return;c++;var pg=priceInMonth(b,ms);var pc=commInMonth(b,ms);g+=pg;cm+=pc;n+=pg-pc;});return{count:c,gross:g,commission:cm,net:n};}
+function calcRevYear(bks,ys){let c=0,g=0,cm=0,n=0;bks.forEach(b=>{var py=b.check_in.slice(0,4);if(py!==ys){var py2=b.check_out.slice(0,4);if(py2!==ys)return;}c++;var pg=priceInYear(b,ys);var pc=commInYear(b,ys);g+=pg;cm+=pc;n+=pg-pc;});return{count:c,gross:g,commission:cm,net:n};}
 
 function groupByRoom(bks){const r={};bks.forEach(b=>{const rid=b.room_id;if(!r[rid])r[rid]={id:rid,name:roomName(rid),count:0,gross:0,commission:0,net:0};r[rid].count++;r[rid].gross+=b.price||0;const p=b.platform||'direct';const comm=(p==='airbnb')?(b.price||0)*0.186:(p==='booking')?(b.price||0)*0.166:0;r[rid].commission+=comm;r[rid].net+=(b.price||0)-comm;});return Object.values(r).sort((a,b)=>b.net-a.net);}
+function groupByRoomMonth(bks,ms){const r={};bks.forEach(b=>{if(!bookingsOverlapMonth(b,ms))return;const rid=b.room_id;if(!r[rid])r[rid]={id:rid,name:roomName(rid),count:0,gross:0,commission:0,net:0};r[rid].count++;r[rid].gross+=priceInMonth(b,ms);r[rid].commission+=commInMonth(b,ms);r[rid].net+=netInMonth(b,ms);});return Object.values(r).sort((a,b)=>b.net-a.net);}
+function groupByPlatformMonth(bks,ms){const p={};bks.forEach(b=>{if(!bookingsOverlapMonth(b,ms))return;const k=b.platform||'direct';if(!p[k])p[k]={key:k,label:pMapFull[k]||k,count:0,gross:0,commission:0,net:0};p[k].count++;p[k].gross+=priceInMonth(b,ms);p[k].commission+=commInMonth(b,ms);p[k].net+=netInMonth(b,ms);});return Object.values(p);}
 
 function groupByPlatform(bks){const p={};bks.forEach(b=>{const k=b.platform||'direct';if(!p[k])p[k]={key:k,label:pMapFull[k]||k,count:0,gross:0,commission:0,net:0};p[k].count++;p[k].gross+=b.price||0;const comm=(k==='airbnb')?(b.price||0)*0.186:(k==='booking')?(b.price||0)*0.166:0;p[k].commission+=comm;p[k].net+=(b.price||0)-comm;});return Object.values(p);}
 
@@ -427,14 +438,13 @@ function platformCards(pv){let h='<div class="rev-section"><div class="rev-secti
 function roomMonthMatrix(bks,months){
   const rd={};const mt={};months.forEach(m=>mt[m.key]={gross:0,net:0,count:0});
   let gg=0,gn=0,gc=0;
-  bks.forEach(b=>{const bm=b.check_in.slice(0,7);if(!mt[bm])return;const rid=b.room_id;
+  bks.forEach(b=>{months.forEach(mk=>{if(!bookingsOverlapMonth(b,mk.key))return;const rid=b.room_id;var pg=priceInMonth(b,mk.key);var pn=netInMonth(b,mk.key);
     if(!rd[rid])rd[rid]={name:roomName(rid),months:{}};
-    if(!rd[rid].months[bm])rd[rid].months[bm]={gross:0,net:0,count:0};
-    rd[rid].months[bm].gross+=b.price||0;rd[rid].months[bm].count++;
-    const p=b.platform||'direct';const comm=(p==='airbnb')?(b.price||0)*0.186:(p==='booking')?(b.price||0)*0.166:0;
-    rd[rid].months[bm].net+=(b.price||0)-comm;
-    mt[bm].gross+=b.price||0;mt[bm].net+=(b.price||0)-comm;mt[bm].count++;
-    gg+=b.price||0;gn+=(b.price||0)-comm;gc++;});
+    if(!rd[rid].months[mk.key])rd[rid].months[mk.key]={gross:0,net:0,count:0};
+    rd[rid].months[mk.key].gross+=pg;rd[rid].months[mk.key].count++;
+    rd[rid].months[mk.key].net+=pn;
+    mt[mk.key].gross+=pg;mt[mk.key].net+=pn;mt[mk.key].count++;
+    gg+=pg;gn+=pn;gc++;});});
   let h='<div class="rev-section"><div class="rev-section-title">🏠📅 房间 × 月度收益交叉表</div>';
   h+='<div style="background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:auto;max-height:500px"><table class="rev-matrix"><thead><tr><th>房间</th>';
   months.forEach(m=>h+='<th>'+m.label+'</th>');
@@ -457,14 +467,17 @@ function loadRevenue(){
 
   if(revTab==='overview'){
     navEl.innerHTML='';
-    const r=calcRev(allBks);
+    var or_={count:0,gross:0,commission:0,net:0};var or_seen={};allBks.forEach(b=>{if(!or_seen[b.id]){or_.count++;or_seen[b.id]=true;}var ci=new Date(b.check_in);var co=new Date(b.check_out);for(var dt=new Date(ci.getFullYear(),ci.getMonth(),1);dt<=co;dt.setMonth(dt.getMonth()+1)){var ms=dt.getFullYear()+'-'+String(dt.getMonth()+1).padStart(2,'0');or_.gross+=priceInMonth(b,ms);or_.commission+=commInMonth(b,ms);or_.net+=netInMonth(b,ms);}});
+    const r=or_;
     let html=summaryCards(r,'总订单数');
-    html+=roomCards(groupByRoom(allBks));
-    html+=platformCards(groupByPlatform(allBks));
+    var ov_rooms={};allBks.forEach(b=>{var rid=b.room_id;if(!ov_rooms[rid])ov_rooms[rid]={id:rid,name:roomName(rid),count:0,gross:0,commission:0,net:0};if(!ov_rooms[rid]._c)ov_rooms[rid]._c={};if(!ov_rooms[rid]._c[b.id]){ov_rooms[rid].count++;ov_rooms[rid]._c[b.id]=true;}var ci=new Date(b.check_in);var co=new Date(b.check_out);for(var dt=new Date(ci.getFullYear(),ci.getMonth(),1);dt<=co;dt.setMonth(dt.getMonth()+1)){var ms=dt.getFullYear()+'-'+String(dt.getMonth()+1).padStart(2,'0');ov_rooms[rid].gross+=priceInMonth(b,ms);ov_rooms[rid].commission+=commInMonth(b,ms);ov_rooms[rid].net+=netInMonth(b,ms);}});Object.values(ov_rooms).forEach(r=>delete r._c);
+    html+=roomCards(Object.values(ov_rooms).sort((a,b)=>b.net-a.net));
+    var ov_plat={};allBks.forEach(b=>{var k=b.platform||'direct';if(!ov_plat[k])ov_plat[k]={key:k,label:pMapFull[k]||k,count:0,gross:0,commission:0,net:0};if(!ov_plat[k]._c)ov_plat[k]._c={};if(!ov_plat[k]._c[b.id]){ov_plat[k].count++;ov_plat[k]._c[b.id]=true;}var ci=new Date(b.check_in);var co=new Date(b.check_out);for(var dt=new Date(ci.getFullYear(),ci.getMonth(),1);dt<=co;dt.setMonth(dt.getMonth()+1)){var ms=dt.getFullYear()+'-'+String(dt.getMonth()+1).padStart(2,'0');ov_plat[k].gross+=priceInMonth(b,ms);ov_plat[k].commission+=commInMonth(b,ms);ov_plat[k].net+=netInMonth(b,ms);}});Object.values(ov_plat).forEach(r=>delete r._c);
+    html+=platformCards(Object.values(ov_plat));
 
     // Yearly breakdown
     const yMap={};
-    allBks.forEach(b=>{const by=b.check_in.slice(0,4);if(!yMap[by])yMap[by]={year:by,count:0,gross:0,commission:0,net:0};yMap[by].count++;yMap[by].gross+=b.price||0;const p=b.platform||'direct';const comm=(p==='airbnb')?(b.price||0)*0.186:(p==='booking')?(b.price||0)*0.166:0;yMap[by].commission+=comm;yMap[by].net+=(b.price||0)-comm;});
+    allBks.forEach(b=>{var ci=new Date(b.check_in);var co=new Date(b.check_out);for(var dt=new Date(ci.getFullYear(),ci.getMonth(),1);dt<=co;dt.setMonth(dt.getMonth()+1)){var ys=String(dt.getFullYear());var ms=dt.getFullYear()+'-'+String(dt.getMonth()+1).padStart(2,'0');if(!bookingsOverlapMonth(b,ms))continue;if(!yMap[ys])yMap[ys]={year:ys,count:0,gross:0,commission:0,net:0};if(!b._yCount)yMap[ys].count++;b._yCount=true;yMap[ys].gross+=priceInMonth(b,ms);yMap[ys].commission+=commInMonth(b,ms);yMap[ys].net+=netInMonth(b,ms);}delete b._yCount;});
     const yList=Object.values(yMap).sort((a,b)=>b.year.localeCompare(a.year));
     html+='<div class="rev-section"><div class="rev-section-title">📅 年度收益</div>';
     if(yList.length===0){html+='<div class="empty"><div class="icon">📭</div><div>暂无收益数据</div></div>';}
@@ -476,7 +489,7 @@ function loadRevenue(){
 
     // Quarterly breakdown
     const qMap={};
-    allBks.forEach(b=>{const by=b.check_in.slice(0,4);const bm=parseInt(b.check_in.slice(5,7));const q=Math.ceil(bm/3);const qk=by+'-Q'+q;if(!qMap[qk])qMap[qk]={key:qk,year:by,quarter:q,count:0,gross:0,commission:0,net:0};qMap[qk].count++;qMap[qk].gross+=b.price||0;const p=b.platform||'direct';const comm=(p==='airbnb')?(b.price||0)*0.186:(p==='booking')?(b.price||0)*0.166:0;qMap[qk].commission+=comm;qMap[qk].net+=(b.price||0)-comm;});
+    allBks.forEach(b=>{var ci=new Date(b.check_in);var co=new Date(b.check_out);for(var dt=new Date(ci.getFullYear(),ci.getMonth(),1);dt<=co;dt.setMonth(dt.getMonth()+1)){var ys=String(dt.getFullYear());var mo=dt.getMonth()+1;var q=Math.ceil(mo/3);var qk=ys+'-Q'+q;var ms=ys+'-'+String(mo).padStart(2,'0');if(!bookingsOverlapMonth(b,ms))continue;if(!qMap[qk])qMap[qk]={key:qk,year:ys,quarter:q,count:0,gross:0,commission:0,net:0};if(!b._qCount)b._qCount={};if(!b._qCount[qk]){qMap[qk].count++;b._qCount[qk]=true;}qMap[qk].gross+=priceInMonth(b,ms);qMap[qk].commission+=commInMonth(b,ms);qMap[qk].net+=netInMonth(b,ms);}delete b._qCount;});
     const qList=Object.values(qMap).sort((a,b)=>b.key.localeCompare(a.key));
     html+='<div class="rev-section"><div class="rev-section-title">📅 季度收益</div>';
     if(qList.length===0){html+='<div class="empty"><div class="icon">📭</div><div>暂无收益数据</div></div>';}
@@ -487,11 +500,11 @@ function loadRevenue(){
 
     // Monthly breakdown
     const mMap={};
-    allBks.forEach(b=>{const bm=b.check_in.slice(0,7);if(!mMap[bm])mMap[bm]={month:bm,count:0,gross:0,commission:0,net:0};mMap[bm].count++;mMap[bm].gross+=b.price||0;const p=b.platform||'direct';const comm=(p==='airbnb')?(b.price||0)*0.186:(p==='booking')?(b.price||0)*0.166:0;mMap[bm].commission+=comm;mMap[bm].net+=(b.price||0)-comm;});
+    allBks.forEach(b=>{var ci=new Date(b.check_in);var co=new Date(b.check_out);for(var dt=new Date(ci.getFullYear(),ci.getMonth(),1);dt<=co;dt.setMonth(dt.getMonth()+1)){var ms=dt.getFullYear()+'-'+String(dt.getMonth()+1).padStart(2,'0');if(!bookingsOverlapMonth(b,ms))continue;if(!mMap[ms])mMap[ms]={month:ms,count:0,gross:0,commission:0,net:0};mMap[ms].count++;mMap[ms].gross+=priceInMonth(b,ms);mMap[ms].commission+=commInMonth(b,ms);mMap[ms].net+=netInMonth(b,ms);}});
     const mList=Object.values(mMap).sort((a,b)=>b.month.localeCompare(a.month));
-    html+='<div class="rev-section"><div class="rev-section-title">📅 月度收益明细</div>';
+    html+='<div class="rev-section"><div class="rev-section-title">📅 月度收益明细 <span style="font-size:13px;color:var(--text2);font-weight:400">（跨月订单按晚数分摊到各月）</span></div>';
     if(mList.length===0){html+='<div class="empty"><div class="icon">📭</div><div>暂无收益数据</div></div>';}
-    else{html+='<div style="background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:auto"><table class="rev-table"><thead><tr><th>月份</th><th class="num">订单数</th><th class="num">订单总额</th><th class="num">平台抽佣</th><th class="num">实际到手</th><th class="num">均单价</th></tr></thead><tbody>';
+    else{html+='<div style="background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:auto"><table class="rev-table"><thead><tr><th>月份</th><th class="num">订单数</th><th class="num">本月分摊总额</th><th class="num">平台抽佣</th><th class="num">实际到手</th><th class="num">均每晚</th></tr></thead><tbody>';
       mList.forEach(m=>{const[yy,mm]=m.month.split('-');html+='<tr><td style="font-weight:500">'+yy+'年'+parseInt(mm)+'月</td><td class="num">'+m.count+'</td><td class="num">£'+m.gross.toFixed(2)+'</td><td class="num" style="color:var(--red)">- £'+m.commission.toFixed(2)+'</td><td class="num" style="color:var(--green);font-weight:700">£'+m.net.toFixed(2)+'</td><td class="num">'+(m.count?(m.gross/m.count).toFixed(2):'0')+'</td></tr>';});
       html+='</tbody></table></div>';}
     html+='</div>';
@@ -517,19 +530,19 @@ function loadRevenue(){
   else if(revTab==='monthly'){
     const ms=revMonth.getFullYear()+'-'+String(revMonth.getMonth()+1).padStart(2,'0');
     navEl.innerHTML='<div class="rev-nav"><div class="rev-nav-group"><button onclick="changeRevMonth(-1)">◀ 上月</button><span class="rev-title">'+revMonth.getFullYear()+'年 '+MNAMES[revMonth.getMonth()]+'</span><button onclick="changeRevMonth(1)">下月 ▶</button><button class="btn btn-outline btn-sm" onclick="goRevMonth()">本月</button></div></div>';
-    const bks=allBks.filter(b=>b.check_in.startsWith(ms));
-    const r=calcRev(bks);
+    const bks=allBks.filter(b=>bookingsOverlapMonth(b,ms));
+    const r=calcRevMonth(bks,ms);
     let html=summaryCards(r,'本月订单数');
-    html+=roomCards(groupByRoom(bks));
-    html+=platformCards(groupByPlatform(bks));
+    html+=roomCards(groupByRoomMonth(bks,ms));
+    html+=platformCards(groupByPlatformMonth(bks,ms));
     // Booking detail
-    html+='<div class="rev-section"><div class="rev-section-title">📋 本月预订明细</div>';
+    html+='<div class="rev-section"><div class="rev-section-title">📋 本月预订明细 <span style="font-size:13px;color:var(--text2);font-weight:400">（跨月订单显示本月分摊金额）</span></div>';
     if(bks.length===0){html+='<div class="empty"><div class="icon">📭</div><div>本月暂无已确认的预订</div></div>';}
     else{const sorted=bks.sort((a,b)=>a.check_in.localeCompare(b.check_in));
-      html+='<div style="background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:auto"><table class="rev-table"><thead><tr><th>入住</th><th>退房</th><th>房间</th><th>客人</th><th>平台</th><th class="num">总价</th><th class="num">晚数</th><th class="num">抽佣</th><th class="num">到手</th></tr></thead><tbody>';
-      sorted.forEach(b=>{const p=b.platform||'direct';const comm=(p==='airbnb')?(b.price||0)*0.186:(p==='booking')?(b.price||0)*0.166:0;const net=(b.price||0)-comm;const bc=p==='booking'?'booking':p==='airbnb'?'airbnb':'direct';
-        html+='<tr><td>'+b.check_in+'</td><td>'+b.check_out+'</td><td>🚪 '+roomName(b.room_id)+'</td><td>'+b.guest_name+'</td><td><span class="platform-badge '+bc+'">'+(pMap[p]||p)+'</span></td><td class="num">£'+(b.price||0).toFixed(2)+'</td><td class="num">'+calcBookingNights(b)+'晚</td><td class="num" style="color:var(--red)">'+(comm?'- £'+comm.toFixed(2):'-')+'</td><td class="num" style="color:var(--green);font-weight:600">£'+net.toFixed(2)+'</td></tr>';});
-      html+='<tr class="total-row"><td colspan="6">合计</td><td class="num">£'+r.gross.toFixed(2)+'</td><td class="num" style="color:var(--red)">- £'+r.commission.toFixed(2)+'</td><td class="num" style="color:var(--green)">£'+r.net.toFixed(2)+'</td></tr>';
+      html+='<div style="background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:auto"><table class="rev-table"><thead><tr><th>入住</th><th>退房</th><th>房间</th><th>客人</th><th>平台</th><th class="num">订单总价</th><th class="num">总晚数</th><th class="num">本月晚数</th><th class="num">本月分摊</th><th class="num">抽佣</th><th class="num">到手</th></tr></thead><tbody>';
+      sorted.forEach(b=>{const p=b.platform||'direct';const bc=p==='booking'?'booking':p==='airbnb'?'airbnb':'direct';var pg=priceInMonth(b,ms);var pc=commInMonth(b,ms);var pn=pg-pc;var dn=nightsInMonth(b,ms);var tn=calcBookingNights(b);var cross=tn!==dn;
+        html+='<tr><td>'+b.check_in+'</td><td>'+b.check_out+'</td><td>🚪 '+roomName(b.room_id)+'</td><td>'+b.guest_name+'</td><td><span class="platform-badge '+bc+'">'+(pMap[p]||p)+'</span></td><td class="num">'+(cross?'<span style="color:var(--text2)">£'+(b.price||0).toFixed(0)+'</span>':'£'+(b.price||0).toFixed(2))+'</td><td class="num">'+tn+'晚</td><td class="num" style="color:'+(cross?'var(--orange)':'var(--text2)')+'">'+dn+'晚</td><td class="num" style="font-weight:600">£'+pg.toFixed(2)+'</td><td class="num" style="color:var(--red)">'+(pc?'- £'+pc.toFixed(2):'-')+'</td><td class="num" style="color:var(--green);font-weight:600">£'+pn.toFixed(2)+'</td></tr>';});
+      html+='<tr class="total-row"><td colspan="8">本月合计</td><td class="num">£'+r.gross.toFixed(2)+'</td><td class="num" style="color:var(--red)">- £'+r.commission.toFixed(2)+'</td><td class="num" style="color:var(--green)">£'+r.net.toFixed(2)+'</td></tr>';
       html+='</tbody></table></div>';}
     html+='</div>';
     contentEl.innerHTML=html;
@@ -542,11 +555,14 @@ function loadRevenue(){
     document.getElementById('revQYear').innerHTML=yOpts.map(y=>'<option value="'+y+'"'+(parseInt(y)===revYear?' selected':'')+'>'+y+'年</option>').join('');
     document.getElementById('revQSel').value=revQuarter;
     const qs=(revQuarter-1)*3+1,qe=qs+2,ys=String(revYear);
-    const bks=allBks.filter(b=>{const by=b.check_in.slice(0,4);const bm=parseInt(b.check_in.slice(5,7));return by===ys&&bm>=qs&&bm<=qe;});
-    const r=calcRev(bks);
+    const bks=allBks.filter(b=>{for(var mo=qs;mo<=qe;mo++){var ms=ys+'-'+String(mo).padStart(2,'0');if(bookingsOverlapMonth(b,ms))return true;}return false;});
+    var qr={count:0,gross:0,commission:0,net:0};var seen={};bks.forEach(b=>{if(!seen[b.id]){qr.count++;seen[b.id]=true;}for(var mo=qs;mo<=qe;mo++){var ms=ys+'-'+String(mo).padStart(2,'0');qr.gross+=priceInMonth(b,ms);qr.commission+=commInMonth(b,ms);qr.net+=netInMonth(b,ms);}});
+    const r=qr;
     let html=summaryCards(r,QNAMES[revQuarter-1].split('(')[0]);
-    html+=roomCards(groupByRoom(bks));
-    html+=platformCards(groupByPlatform(bks));
+    var qr_rooms={};bks.forEach(b=>{var rid=b.room_id;if(!qr_rooms[rid])qr_rooms[rid]={id:rid,name:roomName(rid),count:0,gross:0,commission:0,net:0};var seen2='q'+b.id;if(!qr_rooms[rid]._c)qr_rooms[rid]._c={};if(!qr_rooms[rid]._c[b.id]){qr_rooms[rid].count++;qr_rooms[rid]._c[b.id]=true;}for(var mo=qs;mo<=qe;mo++){var ms=ys+'-'+String(mo).padStart(2,'0');qr_rooms[rid].gross+=priceInMonth(b,ms);qr_rooms[rid].commission+=commInMonth(b,ms);qr_rooms[rid].net+=netInMonth(b,ms);}});Object.values(qr_rooms).forEach(r=>delete r._c);
+    html+=roomCards(Object.values(qr_rooms).sort((a,b)=>b.net-a.net));
+    var qr_plat={};bks.forEach(b=>{var k=b.platform||'direct';if(!qr_plat[k])qr_plat[k]={key:k,label:pMapFull[k]||k,count:0,gross:0,commission:0,net:0};if(!qr_plat[k]._c)qr_plat[k]._c={};if(!qr_plat[k]._c[b.id]){qr_plat[k].count++;qr_plat[k]._c[b.id]=true;}for(var mo=qs;mo<=qe;mo++){var ms=ys+'-'+String(mo).padStart(2,'0');qr_plat[k].gross+=priceInMonth(b,ms);qr_plat[k].commission+=commInMonth(b,ms);qr_plat[k].net+=netInMonth(b,ms);}});Object.values(qr_plat).forEach(r=>delete r._c);
+    html+=platformCards(Object.values(qr_plat));
     // Quarter monthly matrix
     const months=[];for(let m=qs;m<=qe;m++)months.push({key:ys+'-'+String(m).padStart(2,'0'),label:m+'月'});
     html+=roomMonthMatrix(bks,months);
@@ -559,11 +575,13 @@ function loadRevenue(){
     const yOpts=Array.from(years).sort((a,b)=>b.localeCompare(a));
     document.getElementById('revYSel').innerHTML=yOpts.map(y=>'<option value="'+y+'"'+(parseInt(y)===revYear?' selected':'')+'>'+y+'年</option>').join('');
     const ys=String(revYear);
-    const bks=allBks.filter(b=>b.check_in.slice(0,4)===ys);
-    const r=calcRev(bks);
+    const bks=allBks.filter(b=>{for(var mo=1;mo<=12;mo++){var ms=ys+'-'+String(mo).padStart(2,'0');if(bookingsOverlapMonth(b,ms))return true;}return false;});
+    const r=calcRevYear(bks,ys);
     let html=summaryCards(r,ys+'年订单数');
-    html+=roomCards(groupByRoom(bks));
-    html+=platformCards(groupByPlatform(bks));
+    var yr_rooms={};bks.forEach(b=>{var rid=b.room_id;if(!yr_rooms[rid])yr_rooms[rid]={id:rid,name:roomName(rid),count:0,gross:0,commission:0,net:0};if(!yr_rooms[rid]._c)yr_rooms[rid]._c={};if(!yr_rooms[rid]._c[b.id]){yr_rooms[rid].count++;yr_rooms[rid]._c[b.id]=true;}for(var mo=1;mo<=12;mo++){var ms=ys+'-'+String(mo).padStart(2,'0');yr_rooms[rid].gross+=priceInMonth(b,ms);yr_rooms[rid].commission+=commInMonth(b,ms);yr_rooms[rid].net+=netInMonth(b,ms);}});Object.values(yr_rooms).forEach(r=>delete r._c);
+    html+=roomCards(Object.values(yr_rooms).sort((a,b)=>b.net-a.net));
+    var yr_plat={};bks.forEach(b=>{var k=b.platform||'direct';if(!yr_plat[k])yr_plat[k]={key:k,label:pMapFull[k]||k,count:0,gross:0,commission:0,net:0};if(!yr_plat[k]._c)yr_plat[k]._c={};if(!yr_plat[k]._c[b.id]){yr_plat[k].count++;yr_plat[k]._c[b.id]=true;}for(var mo=1;mo<=12;mo++){var ms=ys+'-'+String(mo).padStart(2,'0');yr_plat[k].gross+=priceInMonth(b,ms);yr_plat[k].commission+=commInMonth(b,ms);yr_plat[k].net+=netInMonth(b,ms);}});Object.values(yr_plat).forEach(r=>delete r._c);
+    html+=platformCards(Object.values(yr_plat));
     // Quarterly breakdown within year
     html+='<div class="rev-section"><div class="rev-section-title">📅 '+ys+'年季度收益</div>';
     html+='<div style="background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:auto"><table class="rev-table"><thead><tr><th>季度</th><th class="num">订单数</th><th class="num">订单总额</th><th class="num">平台抽佣</th><th class="num">实际到手</th></tr></thead><tbody>';
