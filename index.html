@@ -197,7 +197,26 @@ function priceInMonth(b,monthStr){if(!b||!b.price||b.price<=0)return 0;var n=cal
 function commInMonth(b,monthStr){if(!b||!b.price||b.price<=0)return 0;var pm=priceInMonth(b,monthStr);var p=b.platform||'direct';var rate=(p==='airbnb')?0.186:(p==='booking')?0.166:0;return Math.round(pm*rate*100)/100;}
 function netInMonth(b,monthStr){return priceInMonth(b,monthStr)-commInMonth(b,monthStr);}
 function bookingsOverlapMonth(b,monthStr){return nightsInMonth(b,monthStr)>0;}
-function dedupeBookings(bks){const placeholders=/^(已预订|平台预订|测试|test|todo|tbd|占位)/i;var filtered=bks.filter(b=>!placeholders.test((b.guest_name||'').trim()));filtered.sort(function(a,b){return(a.id||0)-(b.id||0);});var seen=[];return filtered.filter(function(b){var k=b.room_id+'|'+b.check_in+'|'+b.check_out;for(var i=0;i<seen.length;i++){if(seen[i].k===k)return false;if(seen[i].room_id===b.room_id&&seen[i].check_in<b.check_out&&b.check_in<seen[i].check_out)return false;}seen.push({k:k,room_id:b.room_id,check_in:b.check_in,check_out:b.check_out});return true;});}
+function dedupeBookings(bks){
+  // 新规则：按 ID 降序遍历，同房间+日期冲突时只保留 ID 最大的（最新的预订覆盖旧的）
+  // 不再过滤占位（"已预订"/"平台预订"等），让它们也参与冲突解析
+  var sorted=[...bks].sort(function(a,b){return(b.id||0)-(a.id||0);});
+  var seen=[];
+  return sorted.filter(function(b){
+    if(b.status==='cancelled')return false;
+    var ds=new Date(b.check_in),de=new Date(b.check_out);
+    for(var dt=new Date(ds);dt<de;dt.setDate(dt.getDate()+1)){
+      var dStr=dt.toISOString().slice(0,10);
+      var k=b.room_id+'|'+dStr;
+      if(seen.indexOf(k)!==-1)return false;
+    }
+    for(var dt2=new Date(ds);dt2<de;dt2.setDate(dt2.getDate()+1)){
+      var dStr2=dt2.toISOString().slice(0,10);
+      seen.push(b.room_id+'|'+dStr2);
+    }
+    return true;
+  });
+}
 function priceInYear(b,yearStr){var t=0;var n=calcBookingNights(b);if(n<=0||!b.price)return 0;var ci=new Date(b.check_in);var co=new Date(b.check_out);var ys=parseInt(yearStr);for(var mo=1;mo<=12;mo++){var ms=yearStr+'-'+String(mo).padStart(2,'0');var dn=nightsInMonth(b,ms);if(dn>0)t+=b.price/n*dn;}return Math.round(t*100)/100;}
 function commInYear(b,yearStr){var pm=priceInYear(b,yearStr);var p=b.platform||'direct';var rate=(p==='airbnb')?0.186:(p==='booking')?0.166:0;return Math.round(pm*rate*100)/100;}
 function checkConflict(rid,ci,co,psid,exId){const rc=DB.bookings.find(b=>b.id!==exId&&b.room_id===rid&&b.status!=='cancelled'&&b.check_in<co&&b.check_out>ci);if(rc)return{type:'room',b:rc};if(psid){const pc=DB.bookings.find(b=>b.id!==exId&&b.parking_spot_id===psid&&b.status!=='cancelled'&&b.check_in<co&&b.check_out>ci);if(pc)return{type:'parking',b:pc};}return null;}
@@ -265,9 +284,9 @@ function renderParkingSelect(){document.getElementById('parkingSpot').innerHTML=
 function renderFilterRooms(){document.getElementById('filterRoom').innerHTML='<option value="">全部房间</option>'+DB.rooms.map(r=>'<option value="'+r.id+'">'+r.name+'</option>').join('');}
 function switchTab(t){document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));document.querySelector('.tab[data-tab="'+t+'"]').classList.add('active');document.querySelectorAll('[id^="tab-"]').forEach(el=>el.style.display='none');document.getElementById('tab-'+t).style.display='block';if(t==='revenue')loadRevenue();if(t==='exceptions')loadConflicts();}
 function loadStats(){const today=new Date();today.setHours(0,0,0,0);const todayStr=localDateStr(today);const ms=new Date(today.getFullYear(),today.getMonth(),1);const msStr=localDateStr(ms);const nm=new Date(ms);nm.setMonth(nm.getMonth()+1);const nmStr=localDateStr(nm);const dim=new Date(ms.getFullYear(),ms.getMonth()+1,0).getDate();const totRooms=DB.rooms.length;const totNights=totRooms*dim;
-// 统计本月每间房每天是否被占（去重：同一房间同一天只算一次）
+// 统计本月每间房每天是否被占（同房间同一天只算一次，按 ID 大优先保留）
 let bookedRoomDays={};
-dedupeBookings(DB.bookings.filter(b=>b.status!=='cancelled'&&b.check_in<nmStr&&b.check_out>msStr)).forEach(b=>{
+dedupeBookings(DB.bookings.filter(b=>b.check_in<nmStr&&b.check_out>msStr)).forEach(b=>{
   const os=b.check_in>msStr?b.check_in:msStr;
   const oe=b.check_out<nmStr?b.check_out:nmStr;
   const ds=new Date(os),de=new Date(oe);
@@ -277,31 +296,6 @@ dedupeBookings(DB.bookings.filter(b=>b.status!=='cancelled'&&b.check_in<nmStr&&b
     bookedRoomDays[k]=true;
   }
 });
-// 移除"已预订"占位的房间-日，但保留同时被真实预订占据的日期（真实预订有效）
-const placeholders=/^(已预订|平台预订|测试|test|todo|tbd|占位)/i;
-const realOccupied={};
-dedupeBookings(DB.bookings.filter(b=>b.status!=='cancelled'&&b.check_in<nmStr&&b.check_out>msStr)).forEach(b=>{
-  const os=b.check_in>msStr?b.check_in:msStr;
-  const oe=b.check_out<nmStr?b.check_out:nmStr;
-  const ds=new Date(os),de=new Date(oe);
-  for(let d=new Date(ds);d<de;d.setDate(d.getDate()+1)){
-    const dStr=localDateStr(d);
-    const k=b.room_id+'|'+dStr;
-    realOccupied[k]=true;
-  }
-});
-const placeholderKeys={};
-DB.bookings.filter(b=>b.status!=='cancelled'&&b.check_in<nmStr&&b.check_out>msStr&&placeholders.test((b.guest_name||'').trim())).forEach(b=>{
-  const os=b.check_in>msStr?b.check_in:msStr;
-  const oe=b.check_out<nmStr?b.check_out:nmStr;
-  const ds=new Date(os),de=new Date(oe);
-  for(let d=new Date(ds);d<de;d.setDate(d.getDate()+1)){
-    const dStr=localDateStr(d);
-    const k=b.room_id+'|'+dStr;
-    if(!realOccupied[k])placeholderKeys[k]=true;
-  }
-});
-Object.keys(placeholderKeys).forEach(k=>delete bookedRoomDays[k]);
 const bookedNights=Object.keys(bookedRoomDays).length;
 const vacMonthNights=totNights-bookedNights;
 const occMonthPct=totNights>0?Math.round(bookedNights/totNights*100):0;
