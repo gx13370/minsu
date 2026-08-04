@@ -276,8 +276,19 @@ DB.bookings.filter(b=>b.status!=='cancelled'&&b.check_in<nmStr&&b.check_out>msSt
     bookedRoomDays[k]=true;
   }
 });
-// 去重"已预订"等占位条目，与收益统计逻辑保持一致
+// 移除"已预订"占位的房间-日，但保留同时被真实预订占据的日期（真实预订有效）
 const placeholders=/^(已预订|平台预订|测试|test|todo|tbd|占位)/i;
+const realOccupied={};
+DB.bookings.filter(b=>b.status!=='cancelled'&&b.check_in<nmStr&&b.check_out>msStr&&!placeholders.test((b.guest_name||'').trim())).forEach(b=>{
+  const os=b.check_in>msStr?b.check_in:msStr;
+  const oe=b.check_out<nmStr?b.check_out:nmStr;
+  const ds=new Date(os),de=new Date(oe);
+  for(let d=new Date(ds);d<de;d.setDate(d.getDate()+1)){
+    const dStr=localDateStr(d);
+    const k=b.room_id+'|'+dStr;
+    realOccupied[k]=true;
+  }
+});
 const placeholderKeys={};
 DB.bookings.filter(b=>b.status!=='cancelled'&&b.check_in<nmStr&&b.check_out>msStr&&placeholders.test((b.guest_name||'').trim())).forEach(b=>{
   const os=b.check_in>msStr?b.check_in:msStr;
@@ -286,7 +297,7 @@ DB.bookings.filter(b=>b.status!=='cancelled'&&b.check_in<nmStr&&b.check_out>msSt
   for(let d=new Date(ds);d<de;d.setDate(d.getDate()+1)){
     const dStr=localDateStr(d);
     const k=b.room_id+'|'+dStr;
-    placeholderKeys[k]=true;
+    if(!realOccupied[k])placeholderKeys[k]=true;
   }
 });
 Object.keys(placeholderKeys).forEach(k=>delete bookedRoomDays[k]);
@@ -563,7 +574,7 @@ function loadRevenue(){
 
     // Monthly occupancy table - use unique room-days to avoid double-counting
     const occMap={};
-    allBks.forEach(b=>{const ci=new Date(b.check_in);const co=new Date(b.check_out);let cm=new Date(ci.getFullYear(),ci.getMonth(),1);const cmEnd=new Date(co.getFullYear(),co.getMonth(),1);while(cm<=cmEnd){const ys2=cm.getFullYear();const ms2=ys2+'-'+String(cm.getMonth()+1).padStart(2,'0');const nm2=new Date(ys2,cm.getMonth()+1,1);const lastDay=new Date(ys2,cm.getMonth()+1,0);const msStr2=ms2+'-01';const nmStr3=localDateStr(lastDay);if(!occMap[ms2])occMap[ms2]={month:ms2,bookedNights:0,set:{}};const os=b.check_in>msStr2?b.check_in:msStr2;const oe=b.check_out<nmStr3?b.check_out:nmStr3;const ds=new Date(os),de=new Date(oe);for(let d=new Date(ds);d<de;d.setDate(d.getDate()+1)){const dStr=localDateStr(d);const k=b.room_id+'|'+dStr;occMap[ms2].set[k]=true;}cm.setMonth(cm.getMonth()+1);}});
+    allBks.forEach(b=>{const ci=new Date(b.check_in);const co=new Date(b.check_out);let cm=new Date(ci.getFullYear(),ci.getMonth(),1);const cmEnd=new Date(co.getFullYear(),co.getMonth(),1);while(cm<=cmEnd){const ys2=cm.getFullYear();const ms2=ys2+'-'+String(cm.getMonth()+1).padStart(2,'0');const nm2=new Date(ys2,cm.getMonth()+2,1);const msStr2=ms2+'-01';const nmStr3=localDateStr(nm2);if(!occMap[ms2])occMap[ms2]={month:ms2,bookedNights:0,set:{}};const os=b.check_in>msStr2?b.check_in:msStr2;const oe=b.check_out<nmStr3?b.check_out:nmStr3;const ds=new Date(os),de=new Date(oe);for(let d=new Date(ds);d<de;d.setDate(d.getDate()+1)){const dStr=localDateStr(d);const k=b.room_id+'|'+dStr;occMap[ms2].set[k]=true;}cm.setMonth(cm.getMonth()+1);}});
     Object.values(occMap).forEach(m=>{m.bookedNights=Object.keys(m.set).length;delete m.set;});
     const occList=Object.values(occMap).sort((a,b)=>b.month.localeCompare(a.month));
     html+='<div class="rev-section"><div class="rev-section-title">🏠 月度入住率统计</div>';
