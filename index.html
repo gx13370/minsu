@@ -198,36 +198,54 @@ function commInMonth(b,monthStr){if(!b||!b.price||b.price<=0)return 0;var pm=pri
 function netInMonth(b,monthStr){return priceInMonth(b,monthStr)-commInMonth(b,monthStr);}
 function bookingsOverlapMonth(b,monthStr){return nightsInMonth(b,monthStr)>0;}
 function dedupeBookings(bks){
-  // 规则：同房间+日期冲突时，保留真人名字（不是"已预订/平台预订"等占位）；如果冲突双方都是真人，按 ID 大保留（新的覆盖旧的）
+  // 规则：
+  // 1) 真人优先：所有"已预订/平台预订"等占位不能覆盖真人
+  // 2) 同为真人的冲突，按 ID 大保留（新的覆盖旧的）
+  // 3) 同为占位的冲突，按 ID 大保留
   var placeholders=/^(已预订|平台预订|测试|test|todo|tbd|占位|暂无)/i;
-  var sorted=[...bks].sort(function(a,b){return(b.id||0)-(a.id||0);});
-  var seen=[];
-  return sorted.filter(function(b){
-    if(b.status==='cancelled')return false;
-    var isPlaceholder=placeholders.test((b.guest_name||'').trim());
-    var ds=new Date(b.check_in),de=new Date(b.check_out);
-    for(var dt=new Date(ds);dt<de;dt.setDate(dt.getDate()+1)){
-      var dStr=dt.toISOString().slice(0,10);
-      var k=b.room_id+'|'+dStr;
-      if(seen.indexOf(k)!==-1)return false;
-    }
-    if(isPlaceholder){
-      // 占位只保留"该房间该日期还没有真人"的情况，避免覆盖真人预订
-      var hasRealForAny=false;
-      for(var dt3=new Date(ds);dt3<de;dt3.setDate(dt3.getDate()+1)){
-        var dStr3=dt3.toISOString().slice(0,10);
-        var k3=b.room_id+'|r|'+dStr3;
-        if(seen.indexOf(k3)!==-1){hasRealForAny=true;break;}
-      }
-      if(hasRealForAny)return false;
-    }
-    for(var dt2=new Date(ds);dt2<de;dt2.setDate(dt2.getDate()+1)){
-      var dStr2=dt2.toISOString().slice(0,10);
-      seen.push(b.room_id+'|'+dStr2);
-      if(!isPlaceholder)seen.push(b.room_id+'|r|'+dStr2);
-    }
-    return true;
+  var real=[],ph=[];
+  bks.forEach(function(b){
+    if(b.status==='cancelled')return;
+    if(placeholders.test((b.guest_name||'').trim()))ph.push(b);
+    else real.push(b);
   });
+  // 真人按 ID 升序遍历，先入者保留
+  real.sort(function(a,b){return(a.id||0)-(b.id||0);});
+  // 占位按 ID 降序（虽然最后会被真人覆盖）
+  ph.sort(function(a,b){return(b.id||0)-(a.id||0);});
+  var seen=[];
+  var result=[];
+  // 第一步：处理真人（同房间同日冲突时保留 ID 大的 - 新的覆盖旧的）
+  real.sort(function(a,b){return(b.id||0)-(a.id||0);});
+  real.forEach(function(b){
+    var ds=new Date(b.check_in),de=new Date(b.check_out);
+    var conflict=false;
+    for(var dt=new Date(ds);dt<de;dt.setDate(dt.getDate()+1)){
+      if(seen.indexOf(b.room_id+'|'+dt.toISOString().slice(0,10))!==-1){conflict=true;break;}
+    }
+    if(!conflict){
+      for(var dt2=new Date(ds);dt2<de;dt2.setDate(dt2.getDate()+1)){
+        seen.push(b.room_id+'|'+dt2.toISOString().slice(0,10));
+      }
+      result.push(b);
+    }
+  });
+  // 第二步：处理占位（同房间同日的真人已经处理过，占位跳过）
+  ph.forEach(function(b){
+    var ds=new Date(b.check_in),de=new Date(b.check_out);
+    var conflict=false;
+    for(var dt=new Date(ds);dt<de;dt.setDate(dt.getDate()+1)){
+      if(seen.indexOf(b.room_id+'|'+dt.toISOString().slice(0,10))!==-1){conflict=true;break;}
+    }
+    if(!conflict){
+      for(var dt3=new Date(ds);dt3<de;dt3.setDate(dt3.getDate()+1)){
+        seen.push(b.room_id+'|'+dt3.toISOString().slice(0,10));
+      }
+      result.push(b);
+    }
+  });
+  // 按 ID 升序返回（让最早创建的预订在前面）
+  return result.sort(function(a,b){return(a.id||0)-(b.id||0);});
 }
 function priceInYear(b,yearStr){var t=0;var n=calcBookingNights(b);if(n<=0||!b.price)return 0;var ci=new Date(b.check_in);var co=new Date(b.check_out);var ys=parseInt(yearStr);for(var mo=1;mo<=12;mo++){var ms=yearStr+'-'+String(mo).padStart(2,'0');var dn=nightsInMonth(b,ms);if(dn>0)t+=b.price/n*dn;}return Math.round(t*100)/100;}
 function commInYear(b,yearStr){var pm=priceInYear(b,yearStr);var p=b.platform||'direct';var rate=(p==='airbnb')?0.186:(p==='booking')?0.166:0;return Math.round(pm*rate*100)/100;}
